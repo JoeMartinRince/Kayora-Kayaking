@@ -1,4 +1,4 @@
-import { Clock, Sun, Sparkles, MessageCircle, ArrowUpRight } from "lucide-react";
+import { Clock, Sun, MessageCircle, ArrowUpRight } from "lucide-react";
 import { experiences } from "@/config/experiences";
 import { whatsappLink, experienceMessage } from "@/config/business";
 import { WhatsAppIcon } from "./icons";
@@ -11,13 +11,7 @@ export function ExperiencesSection() {
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         {/* Section Header */}
         <div className="mx-auto max-w-2xl text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-forest/20 bg-mint/80 px-4 py-1.5 shadow-xs">
-            <Sparkles className="h-3.5 w-3.5 text-deep" />
-            <span className="text-xs font-bold tracking-widest text-deep uppercase">
-              Curated Paddle Tours
-            </span>
-          </div>
-          <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-deep sm:text-4xl lg:text-5xl">
+          <h2 className="text-3xl font-extrabold tracking-tight text-deep sm:text-4xl lg:text-5xl">
             Choose Your Adventure
           </h2>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">

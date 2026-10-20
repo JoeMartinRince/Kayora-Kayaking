@@ -1,6 +1,7 @@
 // Media asset paths served from public/assets/ and remote hosted CDN
 export const media = {
   logo: "/assets/logo.jpg",
+  emblemLogo: "/assets/kayora-emblem.png",
   heroVideo:
     "https://res.cloudinary.com/dfzqcxko0/video/upload/v1792462533/VN20261020_073643_h910v8.mp4",
   mobileHeroVideo:

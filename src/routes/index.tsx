@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { LoadingIntro } from "@/components/site/LoadingIntro";
 import { Hero } from "@/components/site/Hero";
 import { ExperiencesSection } from "@/components/site/ExperiencesSection";
 import { WhyChooseSection } from "@/components/site/WhyChooseSection";
@@ -19,6 +20,9 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <div className="relative min-h-screen bg-background text-foreground antialiased selection:bg-mint selection:text-deep">
+      {/* Golden Sunrise loading intro (shown once per visitor session) */}
+      <LoadingIntro />
+
       {/* 1. Hero section with full video/poster background, header, and primary CTAs */}
       <Hero />
 

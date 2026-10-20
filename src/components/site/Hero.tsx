@@ -7,6 +7,10 @@ import { InstagramIcon, WhatsAppIcon } from "./icons";
 
 const ext = { target: "_blank", rel: "noopener noreferrer" } as const;
 
+// Shared glassmorphism styling for hero CTA buttons
+const heroCtaClass =
+  "inline-flex items-center justify-center gap-2 rounded-full border border-on-dark/35 bg-deep/40 px-4 py-2.5 text-xs font-semibold text-on-dark backdrop-blur-sm transition hover:bg-on-dark/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint active:scale-95 sm:px-5 sm:py-3 sm:text-sm sm:font-bold";
+
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -264,11 +268,11 @@ export function Hero() {
             Escape into Kochi&apos;s serene backwaters. Paddle through lush mangroves and discover Kerala from a new perspective.
           </p>
 
-          {/* Refined CTA buttons: Primary Explore + Smaller secondary outlined Book */}
+          {/* Refined CTA buttons sharing identical glassmorphism styling */}
           <div className="mt-4 flex flex-wrap items-center gap-2.5 sm:mt-6 sm:gap-3">
             <a
               href="#experiences"
-              className="group inline-flex items-center gap-2 rounded-full bg-on-dark px-5 py-2.5 text-xs font-bold text-deep transition hover:bg-mint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint active:scale-95 sm:text-sm"
+              className={`group ${heroCtaClass}`}
             >
               <span>Explore Kayaking</span>
               <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-1" />
@@ -276,7 +280,7 @@ export function Hero() {
             <a
               href={whatsappLink()}
               {...ext}
-              className="inline-flex items-center rounded-full border border-on-dark/35 bg-deep/40 px-4 py-2 text-xs font-semibold text-on-dark backdrop-blur-sm transition hover:bg-on-dark/15 active:scale-95 sm:text-sm"
+              className={heroCtaClass}
             >
               Book Your Adventure
             </a>

@@ -30,13 +30,19 @@ export function experienceMessage(name: string) {
   return `Hi Kayora Kayaking! I'm interested in booking ${name}. Please share the available slots and details.`;
 }
 
+// Prefilled enquiry message for the featured signature Mangrove Forest Ride
+export const mangroveRideMessage =
+  "Hi Kayora Kayaking! I'm interested in the Mangrove Forest Ride. Could you share the price, duration, launch location, and available slots?";
+
 export type Experience = {
   id: string;
   name: string;
+  tagline?: string;
   description: string;
   time: string; // VERIFIED
   duration: string; // VERIFIED (approximate, as stated on the current site)
   badge?: string;
+  featured?: boolean;
   // PLACEHOLDER: prices are not published on the current site — fill in to display them.
   price?: string;
   image: string;

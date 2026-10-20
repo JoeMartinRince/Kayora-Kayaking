@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LoadingIntro } from "@/components/site/LoadingIntro";
 import { Hero } from "@/components/site/Hero";
+import { FeaturedRideSection } from "@/components/site/FeaturedRideSection";
 import { ExperiencesSection } from "@/components/site/ExperiencesSection";
 import { WhyChooseSection } from "@/components/site/WhyChooseSection";
 import { AboutSection } from "@/components/site/AboutSection";
@@ -28,38 +29,41 @@ function Index() {
 
       {/* Main Content Sections */}
       <main id="main-content">
-        {/* 2. Kayaking experiences ("Choose Your Adventure") */}
+        {/* 2. Featured Signature Ride ("Mangrove Forest Ride") */}
+        <FeaturedRideSection />
+
+        {/* 3. Regular Kayaking experiences ("Choose Your Adventure") */}
         <ExperiencesSection />
 
-        {/* 3. Why choose Kayora */}
+        {/* 4. Why choose Kayora */}
         <WhyChooseSection />
 
-        {/* 4. About the kayaking experience */}
+        {/* 5. About the kayaking experience */}
         <AboutSection />
 
-        {/* 5. Photo gallery with category filter and lightbox */}
+        {/* 6. Photo gallery with category filter and lightbox */}
         <GallerySection />
 
-        {/* 6. Customer reviews / verified community feedback */}
+        {/* 7. Customer reviews / verified community feedback */}
         <ReviewsSection />
 
-        {/* 7. Booking process */}
+        {/* 8. Booking process */}
         <BookingProcessSection />
 
-        {/* 8. Frequently asked questions */}
+        {/* 9. Frequently asked questions */}
         <FaqSection />
 
-        {/* 9. Location and directions */}
+        {/* 10. Location and directions */}
         <LocationSection />
 
-        {/* 10. Final booking CTA */}
+        {/* 11. Final booking CTA */}
         <FinalCtaSection />
       </main>
 
-      {/* 11. Footer with business info, quick links, and contact */}
+      {/* 12. Footer with business info, quick links, and contact */}
       <Footer />
 
-      {/* 12. Fixed mobile bottom navigation with elevated WhatsApp button */}
+      {/* 13. Fixed mobile bottom navigation with elevated WhatsApp button */}
       <BottomNav />
 
       {/* Desktop floating WhatsApp quick action */}

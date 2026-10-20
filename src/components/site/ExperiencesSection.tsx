@@ -6,8 +6,11 @@ import { WhatsAppIcon } from "./icons";
 const ext = { target: "_blank", rel: "noopener noreferrer" } as const;
 
 export function ExperiencesSection() {
+  // Exclude the featured signature ride so it isn't duplicated in the regular grid
+  const regularExperiences = experiences.filter((exp) => !exp.featured);
+
   return (
-    <section id="experiences" className="relative scroll-mt-20 py-20 lg:py-28">
+    <section id="experiences" className="relative scroll-mt-20 pt-4 pb-20 sm:pt-8 lg:pt-10 lg:pb-28">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         {/* Section Header */}
         <div className="mx-auto max-w-2xl text-center">
@@ -22,7 +25,7 @@ export function ExperiencesSection() {
 
         {/* Experiences Grid */}
         <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-          {experiences.map((exp) => {
+          {regularExperiences.map((exp) => {
             const bookingUrl = whatsappLink(experienceMessage(exp.name));
 
             return (

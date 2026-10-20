@@ -32,9 +32,9 @@ export function Header() {
           <img
             src={media.logo}
             alt="Kayora Kayaking Kochi"
-            className="h-9 w-9 sm:h-10 sm:w-10 shrink-0 rounded-full object-cover object-top ring-2 ring-on-dark/30"
+            className="h-9 w-9 shrink-0 rounded-full object-cover object-top ring-2 ring-on-dark/30 sm:h-10 sm:w-10"
           />
-          <span className="truncate text-base sm:text-lg font-extrabold tracking-tight">
+          <span className="truncate text-base font-extrabold tracking-tight sm:text-lg">
             Kayora<span className="font-medium text-sage"> Kayaking</span>
           </span>
         </a>
@@ -235,31 +235,40 @@ export function Hero() {
 
       <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end px-4 pb-20 pt-20 sm:px-6 sm:pb-24 lg:justify-center lg:px-8 lg:pb-16 lg:pt-28">
         <div className="max-w-2xl animate-fade-up text-left text-on-dark">
-          {/* Location badge */}
-          <div className="inline-flex items-center gap-1.5 rounded-full border border-sage/25 bg-deep/60 px-3 py-1 backdrop-blur-md">
-            <span className="h-1.5 w-1.5 rounded-full bg-whatsapp animate-pulse" />
-            <p className="text-[10px] sm:text-[11px] font-bold tracking-[0.2em] text-sage">
-              KADAMAKKUDY, KOCHI • KERALA
-            </p>
+          {/* Location badge and signature ride quick link */}
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-sage/25 bg-deep/60 px-3 py-1 backdrop-blur-md">
+              <span className="h-1.5 w-1.5 rounded-full bg-whatsapp animate-pulse" />
+              <p className="text-[10px] font-bold tracking-[0.2em] text-sage sm:text-[11px]">
+                KADAMAKKUDY, KOCHI • KERALA
+              </p>
+            </div>
+            <a
+              href="#featured-ride"
+              className="group inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-[10px] font-bold tracking-[0.16em] text-amber-300 shadow-xs backdrop-blur-md transition hover:bg-amber-400/20 active:scale-95 sm:text-[11px]"
+            >
+              <span>EXPLORE OUR SIGNATURE RIDE</span>
+              <ArrowRight className="h-3 w-3 text-amber-300 transition-transform group-hover:translate-x-0.5" />
+            </a>
           </div>
 
           {/* Clean, bold, responsive headline with line height 1.08 and no text overlaps */}
-          <h1 className="mt-2.5 sm:mt-4 text-[1.85rem] font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-7xl">
+          <h1 className="mt-2.5 text-[1.85rem] font-bold leading-[1.08] tracking-tight sm:mt-4 sm:text-5xl lg:text-7xl">
             Find Your Flow.
             <br />
             <span className="text-mint">Follow the Water.</span>
           </h1>
 
           {/* Compact 2-3 line hero description */}
-          <p className="mt-2.5 sm:mt-4 max-w-xl text-sm leading-relaxed text-on-dark/85 sm:text-base lg:text-lg">
+          <p className="mt-2.5 max-w-xl text-sm leading-relaxed text-on-dark/85 sm:mt-4 sm:text-base lg:text-lg">
             Escape into Kochi&apos;s serene backwaters. Paddle through lush mangroves and discover Kerala from a new perspective.
           </p>
 
           {/* Refined CTA buttons: Primary Explore + Smaller secondary outlined Book */}
-          <div className="mt-4 sm:mt-6 flex flex-wrap items-center gap-2.5 sm:gap-3">
+          <div className="mt-4 flex flex-wrap items-center gap-2.5 sm:mt-6 sm:gap-3">
             <a
               href="#experiences"
-              className="group inline-flex items-center gap-2 rounded-full bg-on-dark px-5 py-2.5 text-xs sm:text-sm font-bold text-deep transition hover:bg-mint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint active:scale-95"
+              className="group inline-flex items-center gap-2 rounded-full bg-on-dark px-5 py-2.5 text-xs font-bold text-deep transition hover:bg-mint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint active:scale-95 sm:text-sm"
             >
               <span>Explore Kayaking</span>
               <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-1" />
@@ -267,25 +276,25 @@ export function Hero() {
             <a
               href={whatsappLink()}
               {...ext}
-              className="inline-flex items-center rounded-full border border-on-dark/35 bg-deep/40 px-4 py-2 text-xs sm:text-sm font-semibold text-on-dark backdrop-blur-sm transition hover:bg-on-dark/15 active:scale-95"
+              className="inline-flex items-center rounded-full border border-on-dark/35 bg-deep/40 px-4 py-2 text-xs font-semibold text-on-dark backdrop-blur-sm transition hover:bg-on-dark/15 active:scale-95 sm:text-sm"
             >
               Book Your Adventure
             </a>
           </div>
 
           {/* Compact 3-card hero contact actions in one balanced row */}
-          <div className="mt-3.5 sm:mt-5 grid grid-cols-3 gap-2 sm:flex sm:gap-3">
+          <div className="mt-3.5 grid grid-cols-3 gap-2 sm:mt-5 sm:flex sm:gap-3">
             <a
               href={whatsappLink()}
               {...ext}
-              className="flex flex-col items-center justify-center gap-1 rounded-xl bg-[#25D366] px-2 py-2 text-center text-[10px] sm:text-xs font-bold text-deep shadow-sm transition hover:brightness-105 active:scale-95 sm:flex-row sm:rounded-full sm:px-4 sm:py-2.5"
+              className="flex flex-col items-center justify-center gap-1 rounded-xl bg-[#25D366] px-2 py-2 text-center text-[10px] font-bold text-deep shadow-sm transition hover:brightness-105 active:scale-95 sm:flex-row sm:rounded-full sm:px-4 sm:py-2.5 sm:text-xs"
             >
               <WhatsAppIcon className="h-4 w-4 shrink-0" />
               <span className="truncate">WhatsApp Us</span>
             </a>
             <a
               href={telLink}
-              className="flex flex-col items-center justify-center gap-1 rounded-xl border border-on-dark/20 bg-deep/60 px-2 py-2 text-center text-[10px] sm:text-xs font-semibold text-on-dark backdrop-blur-sm transition hover:bg-on-dark/15 active:scale-95 sm:flex-row sm:rounded-full sm:px-4 sm:py-2.5"
+              className="flex flex-col items-center justify-center gap-1 rounded-xl border border-on-dark/20 bg-deep/60 px-2 py-2 text-center text-[10px] font-semibold text-on-dark backdrop-blur-sm transition hover:bg-on-dark/15 active:scale-95 sm:flex-row sm:rounded-full sm:px-4 sm:py-2.5 sm:text-xs"
             >
               <Phone className="h-4 w-4 shrink-0 text-mint" />
               <span className="truncate">Call Direct</span>
@@ -293,7 +302,7 @@ export function Hero() {
             <a
               href={business.instagramUrl}
               {...ext}
-              className="flex flex-col items-center justify-center gap-1 rounded-xl border border-on-dark/20 bg-deep/60 px-2 py-2 text-center text-[10px] sm:text-xs font-semibold text-on-dark backdrop-blur-sm transition hover:bg-on-dark/15 active:scale-95 sm:flex-row sm:rounded-full sm:px-4 sm:py-2.5"
+              className="flex flex-col items-center justify-center gap-1 rounded-xl border border-on-dark/20 bg-deep/60 px-2 py-2 text-center text-[10px] font-semibold text-on-dark backdrop-blur-sm transition hover:bg-on-dark/15 active:scale-95 sm:flex-row sm:rounded-full sm:px-4 sm:py-2.5 sm:text-xs"
             >
               <span className="grid h-4 w-4 place-items-center rounded bg-instagram">
                 <InstagramIcon className="h-3 w-3" />

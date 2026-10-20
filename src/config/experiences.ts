@@ -1,8 +1,19 @@
 import { media } from "./media";
 import type { Experience } from "./business";
 
-// VERIFIED: names, descriptions, time of day and ~2 hr duration come from the current website.
+// VERIFIED: names, descriptions, time of day and ~2 hr duration come from the current website and business updates.
 export const experiences: Experience[] = [
+  {
+    id: "mangrove-forest",
+    name: "Mangrove Forest Ride",
+    tagline: "Into the green. Away from the ordinary.",
+    description: "Discover Kochi's waterways surrounded by lush mangrove scenery.",
+    time: "Morning & Afternoon",
+    duration: "~2 hrs",
+    badge: "KAYORA SIGNATURE RIDE",
+    featured: true,
+    image: media.mangroveChannel, // Genuine Kayora mangrove route photography
+  },
   {
     id: "sunrise",
     name: "Sunrise Session",
@@ -36,7 +47,7 @@ export const experiences: Experience[] = [
 // VERIFIED: figures shown on the current website.
 export const stats = [
   { value: "800+", label: "Happy paddlers" },
-  { value: "3", label: "Unique packages" },
+  { value: "4", label: "Unique packages" },
   { value: "100%", label: "Safety record" },
 ];
 

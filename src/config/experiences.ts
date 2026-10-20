@@ -1,6 +1,4 @@
-import sunrise from "@/assets/sunrise.jpg.asset.json";
-import explore from "@/assets/group-mangrove.jpg.asset.json";
-import sunset from "@/assets/sunset.jpg.asset.json";
+import { media } from "./media";
 import type { Experience } from "./business";
 
 // VERIFIED: names, descriptions, time of day and ~2 hr duration come from the current website.
@@ -12,7 +10,7 @@ export const experiences: Experience[] = [
       "Start your day on the water as golden light spills across the backwaters. Peaceful, meditative, unforgettable.",
     time: "Early Morning",
     duration: "~2 hrs",
-    image: sunrise.url,
+    image: media.sunrise,
   },
   {
     id: "explorer",
@@ -22,7 +20,7 @@ export const experiences: Experience[] = [
     time: "Midday",
     duration: "~2 hrs",
     badge: "Most Popular",
-    image: explore.url,
+    image: media.explore,
   },
   {
     id: "sunset",
@@ -31,7 +29,7 @@ export const experiences: Experience[] = [
       "Glide into the evening as the sky blazes orange and pink. A romantic, soul-stirring close to any day.",
     time: "Evening",
     duration: "~2 hrs",
-    image: sunset.url,
+    image: media.sunset,
   },
 ];
 

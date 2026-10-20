@@ -78,14 +78,35 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Kayora Kayaking Kochi | Explore Kerala's Backwaters" },
+      {
+        name: "description",
+        content:
+          "Experience guided kayaking in the serene backwaters of Kadamakkudy, Kochi. Sunrise, mangrove explorer, and sunset paddle sessions with certified safety standards.",
+      },
+      { name: "author", content: "Kayora Kayaking Kochi" },
+      {
+        property: "og:title",
+        content: "Kayora Kayaking Kochi | Explore Kerala's Backwaters",
+      },
+      {
+        property: "og:description",
+        content:
+          "Experience guided kayaking in the serene backwaters of Kadamakkudy, Kochi. Sunrise, mangrove explorer, and sunset paddle sessions with certified safety standards.",
+      },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://www.kayorakayakingkochi.com/" },
+      { property: "og:image", content: "/assets/paddle-morning.jpg" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
+      {
+        name: "twitter:title",
+        content: "Kayora Kayaking Kochi | Explore Kerala's Backwaters",
+      },
+      {
+        name: "twitter:description",
+        content: "Experience guided kayaking in the serene backwaters of Kadamakkudy, Kochi.",
+      },
+      { name: "twitter:image", content: "/assets/paddle-morning.jpg" },
     ],
     links: [
       {

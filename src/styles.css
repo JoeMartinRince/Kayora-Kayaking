@@ -74,16 +74,31 @@
   --input: oklch(0.9 0.02 165);
   --ring: var(--aqua);
 
-  --gradient-hero: linear-gradient(180deg, color-mix(in oklab, var(--deep) 55%, transparent) 0%, color-mix(in oklab, var(--deep) 15%, transparent) 35%, color-mix(in oklab, var(--deep) 92%, transparent) 100%);
+  --gradient-hero: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--deep) 55%, transparent) 0%,
+    color-mix(in oklab, var(--deep) 15%, transparent) 35%,
+    color-mix(in oklab, var(--deep) 92%, transparent) 100%
+  );
   --gradient-deep: linear-gradient(160deg, var(--forest), var(--deep));
-  --gradient-instagram: linear-gradient(45deg, oklch(0.8 0.17 80), oklch(0.63 0.24 25), oklch(0.55 0.25 350), oklch(0.5 0.22 300));
+  --gradient-instagram: linear-gradient(
+    45deg,
+    oklch(0.8 0.17 80),
+    oklch(0.63 0.24 25),
+    oklch(0.55 0.25 350),
+    oklch(0.5 0.22 300)
+  );
   --shadow-soft: 0 20px 50px -24px color-mix(in oklab, var(--deep) 35%, transparent);
   --shadow-glow: 0 10px 30px -6px color-mix(in oklab, var(--whatsapp) 60%, transparent);
 }
 
 @layer base {
-  * { border-color: var(--color-border); }
-  html { scroll-behavior: smooth; }
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
@@ -92,31 +107,75 @@
     overflow-x: hidden;
   }
   @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
-@utility bg-hero-overlay { background-image: var(--gradient-hero); }
-@utility bg-deep-gradient { background-image: var(--gradient-deep); }
-@utility bg-instagram { background-image: var(--gradient-instagram); }
-@utility shadow-soft { box-shadow: var(--shadow-soft); }
-@utility shadow-glow { box-shadow: var(--shadow-glow); }
-@utility text-hero-shadow { text-shadow: 0 2px 24px color-mix(in oklab, var(--deep) 60%, transparent); }
-@utility pb-dock { padding-bottom: calc(6.5rem + env(safe-area-inset-bottom)); }
-@utility pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+@utility bg-hero-overlay {
+  background-image: var(--gradient-hero);
+}
+@utility bg-deep-gradient {
+  background-image: var(--gradient-deep);
+}
+@utility bg-instagram {
+  background-image: var(--gradient-instagram);
+}
+@utility shadow-soft {
+  box-shadow: var(--shadow-soft);
+}
+@utility shadow-glow {
+  box-shadow: var(--shadow-glow);
+}
+@utility text-hero-shadow {
+  text-shadow: 0 2px 24px color-mix(in oklab, var(--deep) 60%, transparent);
+}
+@utility pb-dock {
+  padding-bottom: calc(6.5rem + env(safe-area-inset-bottom));
+}
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
 @utility no-scrollbar {
   scrollbar-width: none;
-  &::-webkit-scrollbar { display: none; }
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
-@utility animate-breathe { animation: breathe 2.8s ease-in-out infinite; }
-@utility animate-fade-up { animation: fade-up 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+@utility animate-breathe {
+  animation: breathe 2.8s ease-in-out infinite;
+}
+@utility animate-fade-up {
+  animation: fade-up 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
 
 @keyframes breathe {
-  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--whatsapp) 55%, transparent), var(--shadow-glow); }
-  50% { box-shadow: 0 0 0 12px color-mix(in oklab, var(--whatsapp) 0%, transparent), var(--shadow-glow); }
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 0 color-mix(in oklab, var(--whatsapp) 55%, transparent),
+      var(--shadow-glow);
+  }
+  50% {
+    box-shadow:
+      0 0 0 12px color-mix(in oklab, var(--whatsapp) 0%, transparent),
+      var(--shadow-glow);
+  }
 }
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }

@@ -140,34 +140,60 @@ export function Header() {
 
 export function Hero() {
   const ref = useRef<HTMLVideoElement>(null);
-  const [videoSrc, setVideoSrc] = useState<string | null>(null);
-  const [videoFailed, setVideoFailed] = useState(false);
+  const [videoSrc, setVideoSrc] = useState<string>(media.heroVideo);
+  const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (typeof window === "undefined") return;
 
-    // Breakpoint consistent with existing site header and bottom navigation (lg = 1024px)
-    const mql = window.matchMedia("(max-width: 1023px)");
-    const updateVideoSrc = () => {
-      setVideoSrc(mql.matches ? media.mobileHeroVideo : media.heroVideo);
-    };
+    const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (mql.matches) {
+      setReducedMotion(true);
+      return;
+    }
 
-    updateVideoSrc();
-    mql.addEventListener("change", updateVideoSrc);
-    return () => mql.removeEventListener("change", updateVideoSrc);
+    const onMotionChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    mql.addEventListener("change", onMotionChange);
+    return () => mql.removeEventListener("change", onMotionChange);
   }, []);
 
   useEffect(() => {
-    if (!videoSrc || !ref.current || videoFailed) return;
-    const playPromise = ref.current.play();
-    if (playPromise !== undefined) {
-      playPromise.catch((err) => {
-        if (err.name !== "AbortError") {
-          setVideoFailed(true);
-        }
-      });
+    if (reducedMotion) return;
+    const video = ref.current;
+    if (!video) return;
+
+    // Force DOM properties to satisfy browser autoplay requirements
+    video.defaultMuted = true;
+    video.muted = true;
+
+    const attemptPlay = () => {
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // If browser policy delayed autoplay, resume on the first user interaction
+          const resumeOnInteraction = () => {
+            if (ref.current) {
+              ref.current.defaultMuted = true;
+              ref.current.muted = true;
+              ref.current.play().catch(() => {});
+            }
+          };
+          window.addEventListener("touchstart", resumeOnInteraction, { once: true, passive: true });
+          window.addEventListener("scroll", resumeOnInteraction, { once: true, passive: true });
+          window.addEventListener("click", resumeOnInteraction, { once: true });
+        });
+      }
+    };
+
+    attemptPlay();
+  }, [videoSrc, reducedMotion]);
+
+  const handleVideoError = () => {
+    // If the hosted video fails, fall back to the bundled local video asset
+    if (media.localHeroVideo && videoSrc !== media.localHeroVideo) {
+      setVideoSrc(media.localHeroVideo);
     }
-  }, [videoSrc, videoFailed]);
+  };
 
   return (
     <section
@@ -180,7 +206,7 @@ export function Hero() {
         className="absolute inset-0 -z-20 h-full w-full object-cover"
         fetchPriority="high"
       />
-      {videoSrc && !videoFailed && (
+      {!reducedMotion && (
         <video
           key={videoSrc}
           ref={ref}
@@ -192,9 +218,15 @@ export function Hero() {
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
           aria-hidden="true"
-          onError={() => setVideoFailed(true)}
+          onLoadedData={(e) => {
+            const v = e.currentTarget;
+            v.defaultMuted = true;
+            v.muted = true;
+            v.play().catch(() => {});
+          }}
+          onError={handleVideoError}
         />
       )}
       <div className="absolute inset-0 -z-10 bg-hero-overlay" />

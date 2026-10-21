@@ -81,9 +81,15 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-2.5 lg:hidden">
-          <span className="flex items-center gap-1 rounded-full bg-on-dark/10 px-2 py-0.5 text-[11px] font-medium text-on-dark/90 backdrop-blur-sm">
+          <a
+            href={business.headerLocationMapUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="View Kayora Kayaking location in Google Maps"
+            className="flex items-center gap-1 rounded-full bg-on-dark/10 px-2.5 py-1 text-[11px] font-medium text-on-dark/90 backdrop-blur-sm transition-colors hover:bg-on-dark/20 hover:text-on-dark active:scale-95"
+          >
             <MapPin className="h-3 w-3 text-sage" /> Kochi
-          </span>
+          </a>
           <button
             type="button"
             onClick={() => setOpen((o) => !o)}
@@ -239,25 +245,19 @@ export function Hero() {
 
       <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end px-4 pb-20 pt-20 sm:px-6 sm:pb-24 lg:justify-center lg:px-8 lg:pb-16 lg:pt-28">
         <div className="max-w-2xl animate-fade-up text-left text-on-dark">
-          {/* Location badge and signature ride quick link */}
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-sage/25 bg-deep/60 px-3 py-1 backdrop-blur-md">
-              <span className="h-1.5 w-1.5 rounded-full bg-whatsapp animate-pulse" />
-              <p className="text-[10px] font-bold tracking-[0.2em] text-sage sm:text-[11px]">
-                KADAMAKKUDY, KOCHI • KERALA
-              </p>
-            </div>
+          {/* Subtle text link to featured Mangrove Forest Ride */}
+          <div>
             <a
               href="#featured-ride"
-              className="group inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-[10px] font-bold tracking-[0.16em] text-amber-300 shadow-xs backdrop-blur-md transition hover:bg-amber-400/20 active:scale-95 sm:text-[11px]"
+              className="group inline-flex items-center gap-1.5 text-xs font-semibold tracking-wider text-sage transition-colors hover:text-mint active:scale-95 sm:text-sm"
             >
-              <span>EXPLORE OUR SIGNATURE RIDE</span>
-              <ArrowRight className="h-3 w-3 text-amber-300 transition-transform group-hover:translate-x-0.5" />
+              <span>DISCOVER THE MANGROVES</span>
+              <ArrowRight className="h-3.5 w-3.5 text-sage transition-transform group-hover:translate-x-1 group-hover:text-mint" />
             </a>
           </div>
 
           {/* Clean, bold, responsive headline with line height 1.08 and no text overlaps */}
-          <h1 className="mt-2.5 text-[1.85rem] font-bold leading-[1.08] tracking-tight sm:mt-4 sm:text-5xl lg:text-7xl">
+          <h1 className="mt-2 text-[1.85rem] font-bold leading-[1.08] tracking-tight sm:mt-3 sm:text-5xl lg:text-7xl">
             Find Your Flow.
             <br />
             <span className="text-mint">Follow the Water.</span>

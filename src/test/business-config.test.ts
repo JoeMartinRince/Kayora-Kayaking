@@ -15,6 +15,9 @@ describe("Business Configuration & Helpers", () => {
     expect(telLink).toBe("tel:+917736629393");
     expect(business.instagramUrl).toContain("instagram.com");
     expect(business.launchPointMapUrl).toContain("maps.app.goo.gl");
+    expect(business.headerLocationMapUrl).toBe(
+      "https://maps.app.goo.gl/kC74aMDuAMgspUwS8?g_st=ic"
+    );
   });
 
   it("generates correctly formatted wa.me URLs with encoded messages", () => {
@@ -46,7 +49,7 @@ describe("Business Configuration & Helpers", () => {
     const mangrove = experiences.find((e) => e.id === "mangrove-forest");
     expect(mangrove).toBeDefined();
     expect(mangrove?.name).toBe("Mangrove Forest Ride");
-    expect(mangrove?.badge).toBe("KAYORA SIGNATURE RIDE");
+    expect(mangrove?.badge).toBe("FEATURED MANGROVE RIDE");
     expect(mangrove?.featured).toBe(true);
 
     for (const exp of experiences) {

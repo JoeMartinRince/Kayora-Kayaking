@@ -15,6 +15,7 @@ export const business = {
   websiteUrl: "https://www.kayorakayakingkochi.com/", // VERIFIED
   location: "Kadamakkudy, Kochi, Kerala", // VERIFIED (Kadamakkudy, Kerala)
   launchPointMapUrl: "https://maps.app.goo.gl/646dxqUMnUaj7wJ99?g_st=iw", // VERIFIED
+  headerLocationMapUrl: "https://maps.app.goo.gl/kC74aMDuAMgspUwS8?g_st=ic",
   officeMapUrl: "https://maps.app.goo.gl/PLmSk8uYVRPBrNkXA?g_st=iw", // VERIFIED
   defaultMessage:
     "Hi Kayora Kayaking! I'd like to know more about your kayaking packages and available slots.",

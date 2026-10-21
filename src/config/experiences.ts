@@ -10,7 +10,7 @@ export const experiences: Experience[] = [
     description: "Discover Kochi's waterways surrounded by lush mangrove scenery.",
     time: "Morning & Afternoon",
     duration: "~2 hrs",
-    badge: "KAYORA SIGNATURE RIDE",
+    badge: "FEATURED MANGROVE RIDE",
     featured: true,
     image: media.mangroveChannel, // Genuine Kayora mangrove route photography
   },

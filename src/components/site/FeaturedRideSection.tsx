@@ -1,4 +1,4 @@
-import { ArrowDown, Compass, MapPin, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowDown, Compass, MapPin, ShieldCheck } from "lucide-react";
 import { media } from "@/config/media";
 import { whatsappLink, mangroveRideMessage } from "@/config/business";
 import { WhatsAppIcon } from "./icons";
@@ -19,7 +19,7 @@ export function FeaturedRideSection() {
             aria-hidden="true"
           />
           <div
-            className="pointer-events-none absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-amber-400/10 blur-3xl"
+            className="pointer-events-none absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-sage/10 blur-3xl"
             aria-hidden="true"
           />
 
@@ -43,10 +43,9 @@ export function FeaturedRideSection() {
 
             {/* Featured Content Area */}
             <div className="relative z-10 flex flex-col justify-center p-6 sm:p-8 lg:col-span-5 lg:p-10">
-              {/* Gold/Sage Badge */}
-              <div className="inline-flex items-center gap-1.5 self-start rounded-full border border-amber-400/35 bg-amber-400/10 px-3.5 py-1 text-[10px] font-bold tracking-[0.2em] text-amber-300 uppercase shadow-xs backdrop-blur-sm sm:text-[11px]">
-                <Sparkles className="h-3 w-3 text-amber-300" />
-                <span>KAYORA SIGNATURE RIDE</span>
+              {/* Subtle Sage Badge */}
+              <div className="inline-flex items-center self-start rounded-full border border-sage/35 bg-sage/10 px-3 py-1 text-[10px] font-semibold tracking-wider text-sage uppercase backdrop-blur-sm sm:text-[11px]">
+                <span>FEATURED MANGROVE RIDE</span>
               </div>
 
               {/* Heading */}

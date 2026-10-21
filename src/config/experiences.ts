@@ -12,7 +12,7 @@ export const experiences: Experience[] = [
     duration: "~2 hrs",
     badge: "FEATURED MANGROVE RIDE",
     featured: true,
-    image: media.mangroveChannel, // Genuine Kayora mangrove route photography
+    image: media.mangroveForestRide, // Genuine Kayora mangrove route photography
   },
   {
     id: "sunrise",

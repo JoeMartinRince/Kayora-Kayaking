@@ -25,14 +25,15 @@ export function FeaturedRideSection() {
 
           <div className="grid grid-cols-1 items-stretch lg:grid-cols-12">
             {/* Large, Immersive Mangrove Kayaking Photograph */}
-            <div className="relative min-h-[260px] w-full overflow-hidden sm:min-h-[340px] lg:col-span-7 lg:min-h-[440px]">
+            <div className="relative min-h-[320px] aspect-4/5 w-full overflow-hidden sm:min-h-[380px] sm:aspect-4/3 lg:aspect-auto lg:col-span-7 lg:min-h-[480px]">
               <img
-                src={media.mangroveChannel}
-                alt="Mangrove Forest Ride Kayaking in Kochi"
+                src={media.mangroveForestRide}
+                alt="Kayakers paddling through the mangrove waterways of Kochi at sunset"
                 loading="lazy"
+                style={{ objectPosition: "50% 52%" }}
                 className="h-full w-full object-cover transition-transform duration-700 ease-out hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-deep/90 via-deep/20 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:via-deep/30 lg:to-deep" />
+              <div className="absolute inset-0 bg-gradient-to-t from-deep/40 via-transparent to-transparent lg:bg-gradient-to-r lg:from-transparent lg:via-deep/20 lg:to-deep" />
 
               {/* Floating location badge on image */}
               <div className="absolute top-4 left-4 flex items-center gap-1.5 rounded-full border border-on-dark/20 bg-deep/70 px-3 py-1 text-xs font-semibold text-on-dark backdrop-blur-md">

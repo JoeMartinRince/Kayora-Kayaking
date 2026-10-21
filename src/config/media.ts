@@ -14,6 +14,7 @@ export const media = {
   explore: "/assets/explore.jpg",
   chineseNetsDusk: "/assets/chinese-nets-dusk.jpg",
   mangroveChannel: "/assets/mangrove-channel.jpg",
+  mangroveForestRide: "/assets/mangrove-forest-ride.jpeg",
   nightGlow: "/assets/night-glow.jpg",
   paddleMorning: "/assets/paddle-morning.jpg",
   sunriseGroup: "/assets/sunrise-group.jpg",

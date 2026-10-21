@@ -22,6 +22,13 @@ describe("FeaturedRideSection Component", () => {
       screen.getByText(/discover kochi's waterways surrounded by lush mangrove scenery\./i)
     ).toBeInTheDocument();
 
+    // Check main photograph and meaningful alt text
+    const image = screen.getByRole("img", {
+      name: /kayakers paddling through the mangrove waterways of kochi at sunset/i,
+    });
+    expect(image).toBeInTheDocument();
+    expect(image).toHaveAttribute("src", "/assets/mangrove-forest-ride.jpeg");
+
     // Check primary CTA with correct prefilled WhatsApp link
     const primaryCta = screen.getByRole("link", { name: /enquire on whatsapp/i });
     expect(primaryCta).toBeInTheDocument();

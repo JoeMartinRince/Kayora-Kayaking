@@ -67,7 +67,7 @@ export function ReviewsSection() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-full bg-deep px-5 py-2.5 text-xs font-bold text-on-dark transition hover:bg-forest active:scale-95 sm:text-sm"
               >
-                <span>Tag @kayorakayakingkochi</span>
+                <span>Tag {business.instagramHandle}</span>
                 <ExternalLink className="h-3.5 w-3.5" />
               </a>
             </div>

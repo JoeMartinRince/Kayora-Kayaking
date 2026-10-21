@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Camera, X, ZoomIn } from "lucide-react";
 import { media } from "@/config/media";
+import { business } from "@/config/business";
+import { InstagramIcon } from "./icons";
 
 interface GalleryItem {
   id: string;
@@ -161,6 +163,20 @@ export function GallerySection() {
               </span>
             </button>
           ))}
+        </div>
+
+        {/* Explore on Instagram CTA */}
+        <div className="mt-12 text-center">
+          <a
+            href={business.instagramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Explore more photos on Kayora Kayaking Instagram"
+            className="inline-flex items-center gap-2 rounded-full border border-forest/20 bg-mint/40 px-6 py-3 text-xs font-bold text-deep transition hover:bg-deep hover:text-on-dark active:scale-95 sm:text-sm"
+          >
+            <InstagramIcon className="h-4 w-4" />
+            <span>Explore on Instagram</span>
+          </a>
         </div>
       </div>
 

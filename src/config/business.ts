@@ -10,8 +10,9 @@ export const business = {
   phone: "+917736629393", // VERIFIED
   // PLACEHOLDER: assumed to be the same number as the phone line — confirm WhatsApp is active on it.
   whatsapp: "917736629393",
-  // PLACEHOLDER: official Instagram handle could not be verified. Replace with the real profile URL.
-  instagramUrl: "https://www.instagram.com/kayorakayakingkochi/",
+  // VERIFIED: official Instagram profile
+  instagramHandle: "@kayora_kayaking_kochi",
+  instagramUrl: "https://www.instagram.com/kayora_kayaking_kochi?srtk=MTN5MDIzOWZ1NGx4cQ==",
   websiteUrl: "https://www.kayorakayakingkochi.com/", // VERIFIED
   location: "Kadamakkudy, Kochi, Kerala", // VERIFIED (Kadamakkudy, Kerala)
   launchPointMapUrl: "https://maps.app.goo.gl/646dxqUMnUaj7wJ99?g_st=iw", // VERIFIED

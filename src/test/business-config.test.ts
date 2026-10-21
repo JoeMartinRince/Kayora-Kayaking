@@ -13,7 +13,9 @@ describe("Business Configuration & Helpers", () => {
     expect(business.phone).toBe("+917736629393");
     expect(business.whatsapp).toBe("917736629393");
     expect(telLink).toBe("tel:+917736629393");
-    expect(business.instagramUrl).toContain("instagram.com");
+    expect(business.instagramUrl).toBe(
+      "https://www.instagram.com/kayora_kayaking_kochi?srtk=MTN5MDIzOWZ1NGx4cQ=="
+    );
     expect(business.launchPointMapUrl).toContain("maps.app.goo.gl");
     expect(business.headerLocationMapUrl).toBe(
       "https://maps.app.goo.gl/kC74aMDuAMgspUwS8?g_st=ic"

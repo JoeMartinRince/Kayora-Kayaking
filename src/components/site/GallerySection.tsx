@@ -1,102 +1,125 @@
-import { useState } from "react";
-import { Camera, X, ZoomIn } from "lucide-react";
-import { media } from "@/config/media";
+import { useState, useMemo, useEffect, useRef } from "react";
+import { Camera, X, ZoomIn, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  getGalleryPhotos,
+  galleryCategories,
+  type GalleryCategory,
+  type GalleryPhoto,
+} from "@/lib/gallery";
 import { business } from "@/config/business";
 import { InstagramIcon } from "./icons";
 
-interface GalleryItem {
-  id: string;
-  src: string;
-  alt: string;
-  title: string;
-  category: "all" | "sunrise" | "mangroves" | "sunset";
-  caption: string;
-}
-
-const items: GalleryItem[] = [
-  {
-    id: "g1",
-    src: media.sunrise,
-    alt: "Paddler greeting the sunrise in Kochi",
-    title: "Golden Sunrise",
-    category: "sunrise",
-    caption: "Early morning calm over Kadamakkudy waters",
-  },
-  {
-    id: "g2",
-    src: media.mangroveChannel,
-    alt: "Mangrove canal lined with tropical trees",
-    title: "Mangrove Tunnels",
-    category: "mangroves",
-    caption: "Sheltered natural passages surrounded by wildlife",
-  },
-  {
-    id: "g3",
-    src: media.sunset,
-    alt: "Sunset over backwater lagoons",
-    title: "Sunset Drift",
-    category: "sunset",
-    caption: "Peaceful twilight hues ending a magical paddle",
-  },
-  {
-    id: "g4",
-    src: media.groupMangrove,
-    alt: "Kayakers paddling together through backwaters",
-    title: "Shared Journeys",
-    category: "mangroves",
-    caption: "Friends and paddlers exploring together",
-  },
-  {
-    id: "g5",
-    src: media.chineseNetsDusk,
-    alt: "Chinese fishing nets silhouetted at dusk in Kochi",
-    title: "Heritage Coastline",
-    category: "sunset",
-    caption: "Iconic fishing net structures along the waterways",
-  },
-  {
-    id: "g6",
-    src: media.nightGlow,
-    alt: "Night glow on backwater reflections",
-    title: "Evening Reflections",
-    category: "sunset",
-    caption: "Quiet water mirrors the soft evening sky",
-  },
-  {
-    id: "g7",
-    src: media.paddleMorning,
-    alt: "Solo kayak on morning mirror water",
-    title: "Dawn Stillness",
-    category: "sunrise",
-    caption: "Glass-like waters before the world wakes",
-  },
-  {
-    id: "g8",
-    src: media.explore,
-    alt: "Explorer kayak advancing through green lagoon",
-    title: "Backwater Passage",
-    category: "mangroves",
-    caption: "Deep into Kerala’s pristine aquatic ecosystem",
-  },
-];
-
-const categories = [
-  { key: "all", label: "All Photos" },
-  { key: "sunrise", label: "Sunrise" },
-  { key: "mangroves", label: "Mangrove Trails" },
-  { key: "sunset", label: "Sunset & Twilight" },
-] as const;
-
 export function GallerySection() {
-  const [activeCategory, setActiveCategory] = useState<string>("all");
-  const [activeLightbox, setActiveLightbox] = useState<GalleryItem | null>(null);
+  const allPhotos = useMemo(() => getGalleryPhotos(), []);
+  const [activeCategory, setActiveCategory] = useState<GalleryCategory>("all");
+  const [activeLightboxIndex, setActiveLightboxIndex] = useState<number | null>(null);
 
-  const filtered =
-    activeCategory === "all" ? items : items.filter((item) => item.category === activeCategory);
+  // Focus restoration ref
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const touchStartRef = useRef<number | null>(null);
+
+  // Compute category counts
+  const categoryCounts = useMemo(() => {
+    const counts = { all: allPhotos.length, sunrise: 0, sunset: 0, mangrove: 0 };
+    for (const p of allPhotos) {
+      if (p.category === "sunrise") counts.sunrise++;
+      else if (p.category === "sunset") counts.sunset++;
+      else if (p.category === "mangrove") counts.mangrove++;
+    }
+    return counts;
+  }, [allPhotos]);
+
+  // Filter photos based on selected category (general photos appear under "all" only)
+  const filteredPhotos = useMemo(() => {
+    if (activeCategory === "all") return allPhotos;
+    return allPhotos.filter((p) => p.category === activeCategory);
+  }, [allPhotos, activeCategory]);
+
+  const isOpen =
+    activeLightboxIndex !== null &&
+    activeLightboxIndex >= 0 &&
+    activeLightboxIndex < filteredPhotos.length;
+
+  const currentPhoto = isOpen ? filteredPhotos[activeLightboxIndex] : null;
+
+  // Open lightbox
+  const openLightbox = (index: number, e: React.MouseEvent<HTMLButtonElement>) => {
+    triggerRef.current = e.currentTarget;
+    setActiveLightboxIndex(index);
+  };
+
+  // Close lightbox
+  const closeLightbox = () => {
+    setActiveLightboxIndex(null);
+    if (triggerRef.current) {
+      triggerRef.current.focus();
+    }
+  };
+
+  // Navigate lightbox
+  const showPrev = () => {
+    if (activeLightboxIndex === null || filteredPhotos.length === 0) return;
+    setActiveLightboxIndex((prev) =>
+      prev === null ? null : (prev - 1 + filteredPhotos.length) % filteredPhotos.length
+    );
+  };
+
+  const showNext = () => {
+    if (activeLightboxIndex === null || filteredPhotos.length === 0) return;
+    setActiveLightboxIndex((prev) =>
+      prev === null ? null : (prev + 1) % filteredPhotos.length
+    );
+  };
+
+  // Touch swipe support for mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartRef.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartRef.current === null) return;
+    const touchEnd = e.changedTouches[0].clientX;
+    const diff = touchStartRef.current - touchEnd;
+    if (diff > 50) {
+      showNext();
+    } else if (diff < -50) {
+      showPrev();
+    }
+    touchStartRef.current = null;
+  };
+
+  // Prevent background scrolling when lightbox is open
+  useEffect(() => {
+    if (isOpen) {
+      const prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = prevOverflow;
+      };
+    }
+  }, [isOpen]);
+
+  // Keyboard navigation (Escape, ArrowLeft, ArrowRight)
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        closeLightbox();
+      } else if (e.key === "ArrowLeft") {
+        showPrev();
+      } else if (e.key === "ArrowRight") {
+        showNext();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, activeLightboxIndex, filteredPhotos.length]);
 
   return (
     <section id="gallery" className="relative scroll-mt-20 py-20 lg:py-28">
-      <div className="mx-auto max-w-7xl px-5 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="mx-auto max-w-2xl text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-forest/20 bg-mint/80 px-4 py-1.5 shadow-xs">
@@ -113,57 +136,90 @@ export function GallerySection() {
             excursions in Kochi.
           </p>
 
-          {/* Filter Pills (inspired by yacht app reference) */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
-            {categories.map((c) => {
+          {/* Category Filter Buttons */}
+          <div
+            role="tablist"
+            aria-label="Gallery category filters"
+            className="mt-8 flex flex-wrap items-center justify-center gap-2 sm:gap-2.5"
+          >
+            {galleryCategories.map((c) => {
               const isActive = activeCategory === c.key;
+              const count = categoryCounts[c.key];
+
               return (
                 <button
                   key={c.key}
+                  role="tab"
+                  aria-selected={isActive}
+                  aria-controls="gallery-grid"
                   type="button"
-                  onClick={() => setActiveCategory(c.key)}
-                  className={`rounded-full px-5 py-2 text-xs font-bold transition-all active:scale-95 sm:text-sm ${
+                  onClick={() => {
+                    setActiveCategory(c.key);
+                    setActiveLightboxIndex(null);
+                  }}
+                  className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold transition-all active:scale-95 sm:px-5 sm:py-2.5 sm:text-sm ${
                     isActive
-                      ? "bg-deep text-on-dark shadow-sm"
-                      : "border border-border/80 bg-card text-deep hover:bg-mint/40"
+                      ? "bg-deep text-on-dark shadow-sm ring-1 ring-forest/30"
+                      : "border border-border/80 bg-card text-deep hover:bg-mint/40 hover:text-deep"
                   }`}
                 >
-                  {c.label}
+                  <span>{c.label}</span>
+                  <span
+                    className={`rounded-full px-1.5 py-0.5 text-[10px] font-semibold transition-colors ${
+                      isActive ? "bg-on-dark/20 text-on-dark" : "bg-deep/10 text-deep"
+                    }`}
+                  >
+                    {count}
+                  </span>
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* Gallery Grid */}
-        <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-          {filtered.map((item) => (
+        {/* Gallery Image Grid */}
+        <div
+          id="gallery-grid"
+          role="tabpanel"
+          className="mt-10 sm:mt-12 grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-6"
+        >
+          {filteredPhotos.map((photo, index) => (
             <button
-              key={item.id}
+              key={photo.id}
               type="button"
-              onClick={() => setActiveLightbox(item)}
-              aria-label={`View ${item.title}`}
-              className="group relative flex aspect-4/3 sm:aspect-square w-full cursor-zoom-in overflow-hidden rounded-3xl border border-border bg-card shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-deep text-left"
+              onClick={(e) => openLightbox(index, e)}
+              aria-label={`View photo: ${photo.caption}`}
+              className="group relative flex aspect-4/3 w-full cursor-zoom-in overflow-hidden rounded-2xl sm:aspect-square sm:rounded-3xl border border-border/80 bg-card shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-deep text-left"
             >
               <img
-                src={item.src}
-                alt={item.alt}
+                src={photo.src}
+                alt={photo.alt}
                 loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-deep/80 via-deep/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100" />
+              <div className="absolute inset-0 bg-gradient-to-t from-deep/85 via-deep/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100" />
 
-              <div className="absolute right-4 bottom-4 left-4 translate-y-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
-                <p className="text-base font-bold text-on-dark">{item.title}</p>
-                <p className="mt-0.5 text-xs text-mint/90">{item.caption}</p>
+              <div className="absolute right-3 bottom-3 left-3 translate-y-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
+                <p className="text-xs sm:text-sm font-bold text-on-dark leading-tight line-clamp-1">
+                  {photo.caption}
+                </p>
+                <p className="mt-0.5 text-[10px] sm:text-xs text-mint/90 capitalize">
+                  {photo.category === "general" ? "Moments" : photo.category}
+                </p>
               </div>
 
-              <span className="absolute top-3 right-3 grid h-8 w-8 place-items-center rounded-full bg-deep/70 text-on-dark opacity-0 backdrop-blur-xs transition group-hover:opacity-100">
-                <ZoomIn className="h-4 w-4" />
+              <span className="absolute top-2.5 right-2.5 grid h-7 w-7 sm:h-8 sm:w-8 place-items-center rounded-full bg-deep/75 text-on-dark opacity-0 backdrop-blur-xs transition group-hover:opacity-100">
+                <ZoomIn className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </span>
             </button>
           ))}
         </div>
+
+        {filteredPhotos.length === 0 && (
+          <div className="mt-12 rounded-2xl border border-border/60 bg-card/60 p-8 text-center text-muted-foreground">
+            <p className="text-sm">No photos found in this category yet.</p>
+          </div>
+        )}
 
         {/* Explore on Instagram CTA */}
         <div className="mt-12 text-center">
@@ -180,40 +236,83 @@ export function GallerySection() {
         </div>
       </div>
 
-      {/* Lightbox Modal */}
-      {activeLightbox && (
+      {/* Full-Screen Lightbox Modal */}
+      {isOpen && currentPhoto && (
         <div
           role="dialog"
           aria-modal="true"
-          aria-label={activeLightbox.title}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-deep/90 p-4 backdrop-blur-md animate-fade-up"
-          onClick={() => setActiveLightbox(null)}
-          onKeyDown={(e) => {
-            if (e.key === "Escape") setActiveLightbox(null);
-          }}
+          aria-label={currentPhoto.caption}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-deep/95 p-3 sm:p-6 backdrop-blur-md animate-fade-up"
+          onClick={closeLightbox}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
-          <div
-            className="relative max-h-[90vh] max-w-4xl overflow-hidden rounded-[2rem] border border-on-dark/20 bg-deep p-2 shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
+          {/* Top Bar: Position Counter & Close Button */}
+          <div className="absolute top-3 inset-x-3 sm:top-5 sm:inset-x-6 z-20 flex items-center justify-between pointer-events-none">
+            <div className="pointer-events-auto rounded-full border border-on-dark/20 bg-deep/80 px-3.5 py-1 text-xs font-semibold text-on-dark/90 shadow-md backdrop-blur-sm">
+              <span>
+                {activeLightboxIndex + 1} / {filteredPhotos.length}
+              </span>
+            </div>
+
             <button
               type="button"
-              onClick={() => setActiveLightbox(null)}
+              onClick={closeLightbox}
               aria-label="Close photo preview"
-              className="absolute top-4 right-4 z-10 grid h-10 w-10 place-items-center rounded-full bg-deep/80 text-on-dark shadow-md backdrop-blur-sm transition hover:bg-deep active:scale-95"
+              className="pointer-events-auto grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-full border border-on-dark/20 bg-deep/80 text-on-dark shadow-md backdrop-blur-sm transition hover:bg-deep active:scale-95 focus-visible:outline-2 focus-visible:outline-mint"
             >
               <X className="h-5 w-5" />
             </button>
+          </div>
 
-            <img
-              src={activeLightbox.src}
-              alt={activeLightbox.alt}
-              className="max-h-[75vh] w-auto rounded-2xl object-contain mx-auto"
-            />
+          {/* Navigation Controls & Center Image Container */}
+          <div
+            className="relative flex max-h-[92vh] w-full max-w-5xl flex-col items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Previous Photo Button */}
+            {filteredPhotos.length > 1 && (
+              <button
+                type="button"
+                onClick={showPrev}
+                aria-label="Previous photo"
+                className="absolute left-1 sm:left-3 z-20 grid h-10 w-10 sm:h-12 sm:w-12 place-items-center rounded-full border border-on-dark/20 bg-deep/80 text-on-dark shadow-lg backdrop-blur-sm transition hover:bg-forest hover:scale-105 active:scale-95 focus-visible:outline-2 focus-visible:outline-mint"
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </button>
+            )}
 
-            <div className="p-4 text-center">
-              <h3 className="text-lg font-bold text-on-dark">{activeLightbox.title}</h3>
-              <p className="mt-1 text-sm text-sage">{activeLightbox.caption}</p>
+            {/* Main Lightbox Image (respects natural proportions with contain) */}
+            <div className="relative flex max-h-[76vh] sm:max-h-[80vh] w-full items-center justify-center overflow-hidden p-1">
+              <img
+                src={currentPhoto.src}
+                alt={currentPhoto.alt}
+                className="max-h-[74vh] sm:max-h-[78vh] w-auto max-w-full rounded-2xl object-contain shadow-2xl transition-all"
+              />
+            </div>
+
+            {/* Next Photo Button */}
+            {filteredPhotos.length > 1 && (
+              <button
+                type="button"
+                onClick={showNext}
+                aria-label="Next photo"
+                className="absolute right-1 sm:right-3 z-20 grid h-10 w-10 sm:h-12 sm:w-12 place-items-center rounded-full border border-on-dark/20 bg-deep/80 text-on-dark shadow-lg backdrop-blur-sm transition hover:bg-forest hover:scale-105 active:scale-95 focus-visible:outline-2 focus-visible:outline-mint"
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
+            )}
+
+            {/* Short Caption Area (1-3 words) */}
+            <div className="mt-3 rounded-2xl border border-on-dark/15 bg-deep/80 px-5 py-2 text-center backdrop-blur-sm">
+              <h3 className="text-base sm:text-lg font-bold tracking-wide text-on-dark">
+                {currentPhoto.caption}
+              </h3>
+              <p className="mt-0.5 text-xs text-mint/90 capitalize">
+                {currentPhoto.category === "general"
+                  ? "Kayora Experience"
+                  : `${currentPhoto.category} Session`}
+              </p>
             </div>
           </div>
         </div>

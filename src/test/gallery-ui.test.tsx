@@ -76,4 +76,10 @@ describe("GallerySection UI Component", () => {
     expect(instagramBtn).toHaveAttribute("target", "_blank");
     expect(instagramBtn).toHaveAttribute("rel", "noopener noreferrer");
   });
+
+  it("does not render Mangrove 6 in the gallery", () => {
+    render(<GallerySection />);
+    expect(screen.queryByLabelText(/mangrove 6/i)).toBeNull();
+    expect(screen.queryByLabelText(/mangrove \(6\)/i)).toBeNull();
+  });
 });

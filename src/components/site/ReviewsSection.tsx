@@ -54,7 +54,7 @@ export function ReviewsSection() {
               <MessageSquareQuote className="h-7 w-7" />
             </div>
             <h3 className="mt-5 text-xl font-bold tracking-tight text-deep sm:text-2xl">
-              Over 800+ Paddlers Guided Safely
+              Over 2000+ Paddlers Guided Safely
             </h3>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
               We strictly publish only verified guest reviews. Have you paddled with us in

@@ -48,4 +48,5 @@ export type Experience = {
   // PLACEHOLDER: prices are not published on the current site — fill in to display them.
   price?: string;
   image: string;
+  objectPosition?: string;
 };

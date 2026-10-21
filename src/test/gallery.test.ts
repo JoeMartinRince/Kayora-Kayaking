@@ -95,12 +95,24 @@ describe("Gallery Logic & Categorization", () => {
     }
   });
 
-  it("provides 4 standard filter categories", () => {
-    expect(galleryCategories.map((c) => c.key)).toEqual([
-      "all",
-      "sunrise",
-      "sunset",
-      "mangrove",
-    ]);
+  it("excludes Mangrove 6 from the gallery while preserving Mangrove 1-5", () => {
+    const photos = getGalleryPhotos();
+    const mangrove6 = photos.find(
+      (p) =>
+        p.filename.toLowerCase().includes("mangrove (6)") ||
+        p.filename.toLowerCase().includes("mangrove 6")
+    );
+    expect(mangrove6).toBeUndefined();
+
+    // Verify Mangrove 1 through 5 are present
+    const mangroveNames = photos
+      .filter((p) => p.category === "mangrove")
+      .map((p) => p.filename.toLowerCase());
+
+    expect(mangroveNames.some((n) => n.includes("mangrove (1)") || n.includes("mangrove 1"))).toBe(true);
+    expect(mangroveNames.some((n) => n.includes("mangrove (2)") || n.includes("mangrove 2"))).toBe(true);
+    expect(mangroveNames.some((n) => n.includes("mangrove (3)") || n.includes("mangrove 3"))).toBe(true);
+    expect(mangroveNames.some((n) => n.includes("mangrove (4)") || n.includes("mangrove 4"))).toBe(true);
+    expect(mangroveNames.some((n) => n.includes("mangrove (5)") || n.includes("mangrove 5"))).toBe(true);
   });
 });

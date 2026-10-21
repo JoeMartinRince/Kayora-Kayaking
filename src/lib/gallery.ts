@@ -155,6 +155,22 @@ const publicGalleryModules = import.meta.glob<string>(
 );
 
 /**
+ * Excluded gallery images (normalized to lowercase, whitespace trimmed).
+ * To restore an image in the future (e.g. Mangrove 6), remove it from this set.
+ */
+export const excludedGalleryImages = new Set<string>([
+  "mangrove 6",
+  "mangrove (6)",
+]);
+
+export function isExcludedGalleryImage(filename: string): boolean {
+  const baseKey = getBaseName(filename).toLowerCase().replace(/\s+/g, " ").trim();
+  if (excludedGalleryImages.has(baseKey)) return true;
+  const stripped = baseKey.replace(/[()]/g, "").replace(/\s+/g, " ").trim();
+  return excludedGalleryImages.has(stripped);
+}
+
+/**
  * Build the complete, naturally sorted gallery photo collection.
  */
 export function getGalleryPhotos(): GalleryPhoto[] {
@@ -164,6 +180,8 @@ export function getGalleryPhotos(): GalleryPhoto[] {
   // Process src/Gallery modules first (highest priority)
   for (const [path, url] of Object.entries(srcGalleryModules)) {
     const filename = getFilename(path);
+    if (isExcludedGalleryImage(filename)) continue;
+
     const baseKey = getBaseName(filename).toLowerCase();
     const category = getCategoryFromFilename(filename);
     const caption = getCaptionFromFilename(filename, category);
@@ -181,6 +199,8 @@ export function getGalleryPhotos(): GalleryPhoto[] {
   // Process public/assets/gallery modules if not already added
   for (const [path, rawUrl] of Object.entries(publicGalleryModules)) {
     const filename = getFilename(path);
+    if (isExcludedGalleryImage(filename)) continue;
+
     const baseKey = getBaseName(filename).toLowerCase();
 
     if (!photoMap.has(baseKey)) {

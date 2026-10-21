@@ -6,7 +6,7 @@ import {
   mangroveRideMessage,
   telLink,
 } from "@/config/business";
-import { experiences } from "@/config/experiences";
+import { experiences, stats } from "@/config/experiences";
 
 describe("Business Configuration & Helpers", () => {
   it("has valid business phone and contact details", () => {
@@ -58,5 +58,17 @@ describe("Business Configuration & Helpers", () => {
       expect(exp.image).toMatch(/^\/assets\//);
       expect(exp.duration).toBe("~2 hrs");
     }
+
+    const sunrise = experiences.find((e) => e.id === "sunrise");
+    expect(sunrise?.image).toBe("/assets/rides/Sunrise.jpg");
+
+    const explorer = experiences.find((e) => e.id === "explorer");
+    expect(explorer?.image).toBe("/assets/rides/Explorer.jpg");
+
+    const sunset = experiences.find((e) => e.id === "sunset");
+    expect(sunset?.image).toBe("/assets/rides/Sunset.jpg");
+
+    const happyPaddlers = stats.find((s) => s.label.toLowerCase().includes("paddler"));
+    expect(happyPaddlers?.value).toBe("2000+");
   });
 });

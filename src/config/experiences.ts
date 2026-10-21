@@ -13,6 +13,7 @@ export const experiences: Experience[] = [
     badge: "FEATURED MANGROVE RIDE",
     featured: true,
     image: media.mangroveForestRide, // Genuine Kayora mangrove route photography
+    objectPosition: "50% 52%",
   },
   {
     id: "sunrise",
@@ -22,6 +23,7 @@ export const experiences: Experience[] = [
     time: "Early Morning",
     duration: "~2 hrs",
     image: media.sunrise,
+    objectPosition: "50% 68%",
   },
   {
     id: "explorer",
@@ -32,6 +34,7 @@ export const experiences: Experience[] = [
     duration: "~2 hrs",
     badge: "Most Popular",
     image: media.explore,
+    objectPosition: "50% 60%",
   },
   {
     id: "sunset",
@@ -41,12 +44,13 @@ export const experiences: Experience[] = [
     time: "Evening",
     duration: "~2 hrs",
     image: media.sunset,
+    objectPosition: "50% 45%",
   },
 ];
 
 // VERIFIED: figures shown on the current website.
 export const stats = [
-  { value: "800+", label: "Happy paddlers" },
+  { value: "2000+", label: "Happy paddlers" },
   { value: "4", label: "Unique packages" },
   { value: "100%", label: "Safety record" },
 ];

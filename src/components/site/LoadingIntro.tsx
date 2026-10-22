@@ -6,6 +6,7 @@ const INTRO_STORAGE_KEY = "kayora_intro_seen";
 export function LoadingIntro() {
   const [isActive, setIsActive] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     // Only run on browser client
@@ -33,14 +34,15 @@ export function LoadingIntro() {
     // Activate the intro overlay
     setIsActive(true);
 
-    // Sequence timing:
-    // 0 - 0.4s: Golden sunrise glow emerges on deep teal
-    // 0.4 - 1.2s: Logo fades in & scales from 94% to 100%, turquoise ripples pulse
-    // 1.2 - 1.8s: "YOUR ADVENTURE BEGINS HERE" fades in
-    // 1.8 - 2.3s: Intro overlay fades away to reveal hero video
+    // Sequence timing (total approx. 2.0s):
+    // 0 - 0.3s: Office photo appears with gentle cinematic zoom
+    // 0.25 - 1.0s: Centered logo fades in with golden/sage ambient glow & water ripples
+    // 0.8 - 1.4s: Tagline "YOUR ADVENTURE BEGINS HERE" fades in
+    // 1.4 - 1.6s: Hold the completed cinematic scene briefly
+    // 1.6 - 2.0s: Smooth fade-out dissolving seamlessly into the homepage
     const fadeOutTimer = window.setTimeout(() => {
       setIsFadingOut(true);
-    }, 1800);
+    }, 1600);
 
     const endTimer = window.setTimeout(() => {
       setIsActive(false);
@@ -49,7 +51,7 @@ export function LoadingIntro() {
       } catch {
         // ignore
       }
-    }, 2300);
+    }, 2000);
 
     return () => {
       window.clearTimeout(fadeOutTimer);
@@ -62,63 +64,86 @@ export function LoadingIntro() {
   return (
     <aside
       aria-label="Loading intro"
-      className={`fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden bg-[#123D40] transition-opacity duration-500 ease-in-out ${
+      className={`fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden bg-[#123D40] transition-opacity duration-400 ease-out ${
         isFadingOut ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
     >
-      <div className="relative flex flex-col items-center justify-center px-6">
-        {/* Warm Golden Sunrise Glow behind the emblem */}
+      {/* 1. Full-screen office photograph with gentle zoom-in effect */}
+      <div className="absolute inset-0 overflow-hidden">
+        {!imageError && (
+          <img
+            src={media.officeWelcome}
+            alt="Kayora Kayaking Office in Kadamakkudy with colorful kayaks"
+            fetchPriority="high"
+            className="h-full w-full object-cover will-change-transform"
+            style={{
+              objectPosition: "50% 35%",
+              animation: "office-zoom 2.2s cubic-bezier(0.25, 1, 0.5, 1) forwards",
+            }}
+            onError={() => setImageError(true)}
+          />
+        )}
+        {/* Subtle deep-teal translucent cinematic overlay preserving kayak colors & sign */}
+        <div
+          className="absolute inset-0 bg-gradient-to-b from-[#0B2527]/55 via-[#123D40]/40 to-[#081B1C]/65 backdrop-blur-[0.5px]"
+          aria-hidden="true"
+        />
+      </div>
+
+      {/* 2 & 3. Centered logo reveal, golden/sage glow, water ripples, & tagline */}
+      <div className="relative z-10 flex flex-col items-center justify-center px-6">
+        {/* Subtle golden/sage glow behind the logo */}
         <div
           className="pointer-events-none absolute -translate-y-4 rounded-full blur-2xl"
           style={{
             width: "min(360px, 80vw)",
             height: "min(360px, 80vw)",
             background:
-              "radial-gradient(circle, rgba(251, 191, 36, 0.48) 0%, rgba(245, 158, 11, 0.22) 42%, rgba(18, 61, 64, 0) 72%)",
-            animation: "sunrise-glow 2.3s ease-out forwards",
+              "radial-gradient(circle, rgba(251, 191, 36, 0.42) 0%, rgba(163, 203, 168, 0.28) 42%, rgba(18, 61, 64, 0) 72%)",
+            animation: "sunrise-glow 2.0s ease-out forwards",
           }}
           aria-hidden="true"
         />
 
-        {/* Soft Turquoise Water Ripples outward beneath the logo */}
+        {/* Smooth, restrained water ripple effect beneath the logo */}
         <div
           className="pointer-events-none absolute top-[68%] left-1/2 -translate-x-1/2 -translate-y-1/2"
           aria-hidden="true"
         >
           <div
-            className="rounded-full border border-mint/45"
+            className="rounded-full border border-mint/40"
             style={{
-              width: "min(320px, 76vw)",
-              height: "min(72px, 17vw)",
-              animation: "water-ripple 1.6s cubic-bezier(0.2, 0.6, 0.35, 1) 0.45s forwards",
+              width: "min(300px, 72vw)",
+              height: "min(64px, 16vw)",
+              animation: "water-ripple 1.4s cubic-bezier(0.2, 0.6, 0.35, 1) 0.35s forwards",
             }}
           />
           <div
-            className="absolute inset-0 rounded-full border border-mint/30"
+            className="absolute inset-0 rounded-full border border-mint/25"
             style={{
-              width: "min(320px, 76vw)",
-              height: "min(72px, 17vw)",
-              animation: "water-ripple 1.6s cubic-bezier(0.2, 0.6, 0.35, 1) 0.8s forwards",
+              width: "min(300px, 72vw)",
+              height: "min(64px, 16vw)",
+              animation: "water-ripple 1.4s cubic-bezier(0.2, 0.6, 0.35, 1) 0.7s forwards",
             }}
           />
         </div>
 
-        {/* Kayora Exact Supplied Emblem Logo */}
+        {/* Centered original Kayora logo */}
         <div className="relative z-10 flex flex-col items-center">
           <img
             src={media.emblemLogo}
             alt="Kayora Kayaking Kochi Emblem"
-            className="h-auto w-44 max-h-[46vh] max-w-[72vw] object-contain drop-shadow-[0_12px_28px_rgba(0,0,0,0.4)] sm:w-56 md:w-64 lg:w-72"
+            className="h-auto w-40 max-h-[38vh] max-w-[68vw] object-contain drop-shadow-[0_10px_28px_rgba(0,0,0,0.55)] sm:w-52 md:w-56 lg:w-60"
             style={{
-              animation: "logo-intro 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.38s both",
+              animation: "logo-intro 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both",
             }}
           />
 
-          {/* Letter-spaced Subtitle */}
+          {/* Elegant Tagline */}
           <p
-            className="mt-6 text-center text-[10px] font-semibold tracking-[0.28em] text-mint uppercase sm:text-xs md:text-sm"
+            className="mt-5 text-center text-[10px] font-semibold tracking-[0.28em] text-cream uppercase drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] sm:text-xs md:text-sm"
             style={{
-              animation: "text-intro 0.65s ease-out 1.2s both",
+              animation: "text-intro 0.5s ease-out 0.8s both",
             }}
           >
             Your Adventure Begins Here

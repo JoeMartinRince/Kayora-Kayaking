@@ -235,3 +235,12 @@
     transform: translateY(0);
   }
 }
+
+@keyframes office-zoom {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.06);
+  }
+}

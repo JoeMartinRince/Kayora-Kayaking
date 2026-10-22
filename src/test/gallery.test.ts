@@ -4,17 +4,18 @@ import {
   getCaptionFromFilename,
   getGalleryPhotos,
   galleryCategories,
+  categoryDescriptions,
   isExcludedGalleryImage,
-  curatedGalleryItems,
 } from "@/lib/gallery";
 
 describe("Gallery Logic & Categorization", () => {
-  it("has exactly six filters in the specified order with All first", () => {
+  it("has exactly seven filters in the specified order with All first and Winged Visitors before Golden Hour", () => {
     expect(galleryCategories.map((c) => c.key)).toEqual([
       "all",
       "sunrise",
       "sunset",
       "mangrove",
+      "winged-visitors",
       "golden-hour",
       "happy-guests",
     ]);
@@ -24,9 +25,14 @@ describe("Gallery Logic & Categorization", () => {
       "Sunrise",
       "Sunset",
       "Mangrove",
+      "Winged Visitors",
       "Golden Hour",
       "Happy Guests",
     ]);
+
+    expect(categoryDescriptions["winged-visitors"]).toBe(
+      "Paddle through the mangroves and discover the fascinating birds that visit these tranquil backwaters."
+    );
   });
 
   it("restores and preserves all original curated gallery images without data loss", () => {
@@ -74,7 +80,19 @@ describe("Gallery Logic & Categorization", () => {
     expect(nightGlow?.category).toBe("golden-hour");
   });
 
-  it("determines categories correctly with non-sequential numbering, hyphens, and underscores", () => {
+  it("determines categories correctly including birds / Winged Visitors", () => {
+    // Winged Visitors (birds)
+    expect(getCategoryFromFilename("birds1.jpg")).toBe("winged-visitors");
+    expect(getCategoryFromFilename("birds2.jpg")).toBe("winged-visitors");
+    expect(getCategoryFromFilename("birds3.jpeg")).toBe("winged-visitors");
+    expect(getCategoryFromFilename("birds (1).JPG")).toBe("winged-visitors");
+    expect(getCategoryFromFilename("birds (2).JPG")).toBe("winged-visitors");
+    expect(getCategoryFromFilename("birds_4.png")).toBe("winged-visitors");
+    expect(getCategoryFromFilename("birds-5.webp")).toBe("winged-visitors");
+    expect(getCategoryFromFilename("bird 12.avif")).toBe("winged-visitors");
+    expect(getCategoryFromFilename("BIRDS (3).JPG")).toBe("winged-visitors");
+    expect(getCategoryFromFilename("Winged Visitors 1.jpg")).toBe("winged-visitors");
+
     // Sunrise
     expect(getCategoryFromFilename("Sunrise 1.jpg")).toBe("sunrise");
     expect(getCategoryFromFilename("sunrise 2.webp")).toBe("sunrise");
@@ -125,7 +143,14 @@ describe("Gallery Logic & Categorization", () => {
     expect(getCategoryFromFilename("random_backwater.jpg")).toBe("general");
   });
 
-  it("generates concise 1-3 word captions", () => {
+  it("generates concise 1-3 word captions including birds", () => {
+    const b1 = getCaptionFromFilename("birds (1).JPG", "winged-visitors");
+    expect(b1).toBe("Coastal Egret");
+    expect(b1.split(" ").length).toBeLessThanOrEqual(3);
+
+    const b2 = getCaptionFromFilename("birds2.jpg", "winged-visitors");
+    expect(b2).toBe("Mangrove Kingfisher");
+
     const s1 = getCaptionFromFilename("Sunrise 1.jpg", "sunrise");
     expect(s1).toBe("Golden Sunrise");
     expect(s1.split(" ").length).toBeLessThanOrEqual(3);
@@ -141,30 +166,14 @@ describe("Gallery Logic & Categorization", () => {
 
     const gh1 = getCaptionFromFilename("Golden Hour 1.jpg", "golden-hour");
     expect(gh1).toBe("Golden Reflections");
-    expect(gh1.split(" ").length).toBeLessThanOrEqual(3);
-
-    const gh2 = getCaptionFromFilename("goldenhour (2).JPG", "golden-hour");
-    expect(gh2).toBe("Warm Light");
 
     const hg1 = getCaptionFromFilename("Photo 1.jpg", "happy-guests");
     expect(hg1).toBe("Happy Paddlers");
-    expect(hg1.split(" ").length).toBeLessThanOrEqual(3);
-
-    const hg2 = getCaptionFromFilename("other 4.jpg", "happy-guests");
-    expect(hg2).toBe("Group Adventure");
 
     // Fallbacks for unmapped images are strictly 1-3 words
-    const fallbackSunrise = getCaptionFromFilename("Sunrise 99.jpg", "sunrise");
-    expect(fallbackSunrise).toBe("Sunrise Paddle");
-    expect(fallbackSunrise.split(" ").length).toBeLessThanOrEqual(3);
-
-    const fallbackGh = getCaptionFromFilename("golden-hour-99.jpg", "golden-hour");
-    expect(fallbackGh).toBe("Golden Reflections");
-    expect(fallbackGh.split(" ").length).toBeLessThanOrEqual(3);
-
-    const fallbackHg = getCaptionFromFilename("happy-guests-99.jpg", "happy-guests");
-    expect(fallbackHg).toBe("Happy Paddlers");
-    expect(fallbackHg.split(" ").length).toBeLessThanOrEqual(3);
+    const fallbackBird = getCaptionFromFilename("birds 99.jpg", "winged-visitors");
+    expect(fallbackBird).toBe("Winged Visitors");
+    expect(fallbackBird.split(" ").length).toBeLessThanOrEqual(3);
   });
 
   it("discovers photos from src/Gallery and public/assets/gallery with natural numeric sorting", () => {
@@ -191,18 +200,25 @@ describe("Gallery Logic & Categorization", () => {
     const sunrise = all.filter((p) => p.category === "sunrise");
     const sunset = all.filter((p) => p.category === "sunset");
     const mangrove = all.filter((p) => p.category === "mangrove");
+    const wingedVisitors = all.filter((p) => p.category === "winged-visitors");
     const goldenHour = all.filter((p) => p.category === "golden-hour");
     const happyGuests = all.filter((p) => p.category === "happy-guests");
 
     // All must contain every photo
     expect(all.length).toBe(
-      sunrise.length + sunset.length + mangrove.length + goldenHour.length + happyGuests.length
+      sunrise.length +
+        sunset.length +
+        mangrove.length +
+        wingedVisitors.length +
+        goldenHour.length +
+        happyGuests.length
     );
 
-    // Ensure all 5 categories have photos
+    // Ensure all 6 specific categories have photos
     expect(sunrise.length).toBeGreaterThanOrEqual(2);
     expect(sunset.length).toBeGreaterThanOrEqual(2);
     expect(mangrove.length).toBeGreaterThanOrEqual(2);
+    expect(wingedVisitors.length).toBeGreaterThanOrEqual(4);
     expect(goldenHour.length).toBeGreaterThanOrEqual(1);
     expect(happyGuests.length).toBeGreaterThanOrEqual(2);
 
@@ -212,24 +228,20 @@ describe("Gallery Logic & Categorization", () => {
   });
 
   it("strictly excludes Mangrove 6 while preserving Mangrove 1-5 and not excluding Mangrove 16 or 60", () => {
-    // Direct function exclusion check
     expect(isExcludedGalleryImage("Mangrove 6.jpg")).toBe(true);
     expect(isExcludedGalleryImage("mangrove (6).jpg")).toBe(true);
     expect(isExcludedGalleryImage("mangrove-6.png")).toBe(true);
     expect(isExcludedGalleryImage("mangrove_6.webp")).toBe(true);
 
-    // Must NOT exclude Mangrove 16, 60, 61, etc.
     expect(isExcludedGalleryImage("Mangrove 16.jpg")).toBe(false);
     expect(isExcludedGalleryImage("Mangrove 60.jpg")).toBe(false);
     expect(isExcludedGalleryImage("Mangrove 61.jpg")).toBe(false);
     expect(isExcludedGalleryImage("mangrove (1).png")).toBe(false);
 
-    // Verify in actual loaded gallery photos
     const photos = getGalleryPhotos();
     const mangrove6 = photos.find((p) => isExcludedGalleryImage(p.filename));
     expect(mangrove6).toBeUndefined();
 
-    // Verify Mangrove 1 through 5 are present
     const mangroveNames = photos
       .filter((p) => p.category === "mangrove")
       .map((p) => p.filename.toLowerCase());

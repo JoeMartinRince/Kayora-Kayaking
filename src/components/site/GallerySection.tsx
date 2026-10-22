@@ -3,6 +3,7 @@ import { Camera, X, ZoomIn, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   getGalleryPhotos,
   galleryCategories,
+  categoryDescriptions,
   getCategoryBadgeLabel,
   getCategoryLightboxLabel,
   type GalleryCategory,
@@ -27,6 +28,7 @@ export function GallerySection() {
       sunrise: 0,
       sunset: 0,
       mangrove: 0,
+      "winged-visitors": 0,
       "golden-hour": 0,
       "happy-guests": 0,
     };
@@ -140,9 +142,8 @@ export function GallerySection() {
           <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-deep sm:text-4xl lg:text-5xl">
             Captured from the Kayak
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Real scenes, golden morning light, and lush green channels straight from our daily
-            excursions in Kochi.
+          <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg min-h-[3.25rem] transition-opacity duration-300">
+            {categoryDescriptions[activeCategory] || categoryDescriptions.all}
           </p>
 
           {/* Category Filter Buttons */}

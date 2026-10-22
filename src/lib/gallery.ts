@@ -6,8 +6,8 @@
  *
  * Features:
  * - Preserves all original curated gallery images (Sunrise, Sunset, Mangrove, Customer photos).
- * - Categorizes photos by category name (Sunrise, Sunset, Mangrove, Golden Hour, Happy Guests).
- * - Supports non-sequential numbering (Sunrise 12, Mangrove 11).
+ * - Categorizes photos by category name (Sunrise, Sunset, Mangrove, Winged Visitors, Golden Hour, Happy Guests).
+ * - Supports non-sequential numbering (Sunrise 12, Mangrove 11, birds 1).
  * - Deduplicates by resolved asset key so no image appears twice.
  * - Strictly excludes Mangrove 6 without dropping Mangrove 16 or 60.
  */
@@ -17,6 +17,7 @@ export type GalleryCategory =
   | "sunrise"
   | "sunset"
   | "mangrove"
+  | "winged-visitors"
   | "golden-hour"
   | "happy-guests";
 
@@ -24,7 +25,7 @@ export interface GalleryPhoto {
   id: string;
   filename: string;
   src: string;
-  category: "sunrise" | "sunset" | "mangrove" | "golden-hour" | "happy-guests" | "general";
+  category: "sunrise" | "sunset" | "mangrove" | "winged-visitors" | "golden-hour" | "happy-guests" | "general";
   caption: string;
   subtitle?: string;
   alt: string;
@@ -38,7 +39,7 @@ export interface CuratedGalleryItem {
   title: string;
   caption: string;
   subtitle: string;
-  category: "sunrise" | "sunset" | "mangrove" | "golden-hour" | "happy-guests";
+  category: "sunrise" | "sunset" | "mangrove" | "winged-visitors" | "golden-hour" | "happy-guests";
   alt: string;
 }
 
@@ -140,6 +141,20 @@ export const curatedGalleryItems: CuratedGalleryItem[] = [
 ];
 
 /**
+ * Category descriptions displayed when a category is selected.
+ */
+export const categoryDescriptions: Record<GalleryCategory, string> = {
+  all: "Real scenes, golden morning light, and lush green channels straight from our daily excursions in Kochi.",
+  sunrise: "Early morning calm, mirror waters, and the first light breaking over Kochi backwaters.",
+  sunset: "Peaceful twilight drifts, golden skies, and evening calm along the waterways.",
+  mangrove: "Sheltered natural trails, emerald green canopies, and quiet mangrove passages.",
+  "winged-visitors":
+    "Paddle through the mangroves and discover the fascinating birds that visit these tranquil backwaters.",
+  "golden-hour": "Warm golden light, glowing skies, and atmospheric water reflections.",
+  "happy-guests": "Smiles, memories, and shared adventures from our daily kayaking guests.",
+};
+
+/**
  * Customizable caption mapping (1-3 words)
  * Maps normalized base filename (lowercase, trimmed) to short visitor-facing caption.
  */
@@ -190,6 +205,30 @@ export const captionMap: Record<string, string> = {
   "mangrove 5": "Quiet Channel",
   "mangrove (5)": "Quiet Channel",
   "mangrove 11": "Emerald Waters",
+
+  // Winged Visitors (birds)
+  "birds 1": "Coastal Egret",
+  "birds (1)": "Coastal Egret",
+  birds1: "Coastal Egret",
+  "birds 2": "Mangrove Kingfisher",
+  "birds (2)": "Mangrove Kingfisher",
+  birds2: "Mangrove Kingfisher",
+  "birds 3": "Backwater Heron",
+  "birds (3)": "Backwater Heron",
+  birds3: "Backwater Heron",
+  "birds 4": "River Tern",
+  "birds (4)": "River Tern",
+  birds4: "River Tern",
+  "birds 5": "Quiet Perch",
+  "birds (5)": "Quiet Perch",
+  birds5: "Quiet Perch",
+  "birds 6": "Soaring Cormorant",
+  "birds (6)": "Soaring Cormorant",
+  birds6: "Soaring Cormorant",
+  "winged visitors 1": "Coastal Egret",
+  "winged visitors 2": "Mangrove Kingfisher",
+  "winged visitors 3": "Backwater Heron",
+  "winged visitors 4": "River Tern",
 
   // Golden Hour
   "golden hour 1": "Golden Reflections",
@@ -270,12 +309,12 @@ export function getAssetKey(filepathOrUrl: string): string {
 
 /**
  * Determine category from filename, ignoring capitalization, hyphens, and underscores.
- * Supports non-sequential numbering (e.g. Sunrise 12, Mangrove 11).
+ * Supports non-sequential numbering (e.g. Sunrise 12, Mangrove 11, birds 1).
  * Backward-compatible with older curated assets.
  */
 export function getCategoryFromFilename(
   filename: string
-): "sunrise" | "sunset" | "mangrove" | "golden-hour" | "happy-guests" | "general" {
+): "sunrise" | "sunset" | "mangrove" | "winged-visitors" | "golden-hour" | "happy-guests" | "general" {
   const base = getBaseName(filename)
     .toLowerCase()
     .replace(/[-_]/g, " ")
@@ -289,9 +328,22 @@ export function getCategoryFromFilename(
   if (base === "group mangrove" || base === "sunrise group") return "happy-guests";
   if (base === "mangrove channel" || base === "explore") return "mangrove";
 
+  // Winged Visitors (birds)
+  if (
+    base.startsWith("bird") ||
+    base.startsWith("birds") ||
+    base.startsWith("winged visitor") ||
+    base.startsWith("winged visitors")
+  ) {
+    return "winged-visitors";
+  }
+
+  // Golden Hour
   if (base.startsWith("golden hour") || base.startsWith("goldenhour")) {
     return "golden-hour";
   }
+
+  // Happy Guests
   if (
     base.startsWith("happy guest") ||
     base.startsWith("happy guests") ||
@@ -301,6 +353,7 @@ export function getCategoryFromFilename(
   ) {
     return "happy-guests";
   }
+
   if (base.startsWith("sunrise")) {
     return "sunrise";
   }
@@ -319,7 +372,7 @@ export function getCategoryFromFilename(
  */
 export function getCaptionFromFilename(
   filename: string,
-  category: "sunrise" | "sunset" | "mangrove" | "golden-hour" | "happy-guests" | "general"
+  category: "sunrise" | "sunset" | "mangrove" | "winged-visitors" | "golden-hour" | "happy-guests" | "general"
 ): string {
   const baseKey = getBaseName(filename)
     .toLowerCase()
@@ -344,6 +397,8 @@ export function getCaptionFromFilename(
       return "Sunset Glow";
     case "mangrove":
       return "Mangrove Trail";
+    case "winged-visitors":
+      return "Winged Visitors";
     case "golden-hour":
       return "Golden Reflections";
     case "happy-guests":
@@ -365,6 +420,8 @@ export function getCategoryBadgeLabel(category: string): string {
       return "Sunset";
     case "mangrove":
       return "Mangrove";
+    case "winged-visitors":
+      return "Winged Visitors";
     case "golden-hour":
       return "Golden Hour";
     case "happy-guests":
@@ -385,6 +442,8 @@ export function getCategoryLightboxLabel(category: string): string {
       return "Sunset Session";
     case "mangrove":
       return "Mangrove Session";
+    case "winged-visitors":
+      return "Winged Visitors";
     case "golden-hour":
       return "Golden Hour Session";
     case "happy-guests":
@@ -399,7 +458,9 @@ export function getCategoryLightboxLabel(category: string): string {
  */
 export function getAltText(caption: string, category: string): string {
   const categoryLabel =
-    category === "golden-hour"
+    category === "winged-visitors"
+      ? "Winged Visitors"
+      : category === "golden-hour"
       ? "Golden Hour"
       : category === "happy-guests"
       ? "Guests"
@@ -529,13 +590,15 @@ export function getGalleryPhotos(): GalleryPhoto[] {
 }
 
 /**
- * The six gallery filters in exact required order.
+ * The seven gallery filters in exact required order:
+ * All · Sunrise · Sunset · Mangrove · Winged Visitors · Golden Hour · Happy Guests
  */
 export const galleryCategories: { key: GalleryCategory; label: string }[] = [
   { key: "all", label: "All" },
   { key: "sunrise", label: "Sunrise" },
   { key: "sunset", label: "Sunset" },
   { key: "mangrove", label: "Mangrove" },
+  { key: "winged-visitors", label: "Winged Visitors" },
   { key: "golden-hour", label: "Golden Hour" },
   { key: "happy-guests", label: "Happy Guests" },
 ];

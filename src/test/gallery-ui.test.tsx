@@ -4,16 +4,17 @@ import { GallerySection } from "@/components/site/GallerySection";
 import { business } from "@/config/business";
 
 describe("GallerySection UI Component", () => {
-  it("renders all six category filters in order with initial photo counts", () => {
+  it("renders all seven category filters in order with initial photo counts", () => {
     render(<GallerySection />);
 
     const tabs = screen.getAllByRole("tab");
-    expect(tabs.length).toBe(6);
+    expect(tabs.length).toBe(7);
 
     expect(screen.getByRole("tab", { name: /^all/i })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: /^sunrise/i })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: /^sunset/i })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: /^mangrove/i })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /^winged visitors/i })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: /^golden hour/i })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: /^happy guests/i })).toBeInTheDocument();
 
@@ -22,7 +23,7 @@ describe("GallerySection UI Component", () => {
     expect(buttons.length).toBeGreaterThan(0);
   });
 
-  it("filters photos by category when tabs are clicked including Golden Hour and Happy Guests", () => {
+  it("filters photos by category when tabs are clicked including Winged Visitors, Golden Hour and Happy Guests", () => {
     render(<GallerySection />);
 
     // Click Sunrise
@@ -36,6 +37,19 @@ describe("GallerySection UI Component", () => {
     fireEvent.click(mangroveTab);
     const mangroveButtons = screen.getAllByRole("button", { name: /^view photo:/i });
     expect(mangroveButtons.length).toBeGreaterThan(0);
+
+    // Click Winged Visitors
+    const wvTab = screen.getByRole("tab", { name: /^winged visitors/i });
+    fireEvent.click(wvTab);
+    const wvButtons = screen.getAllByRole("button", { name: /^view photo:/i });
+    expect(wvButtons.length).toBeGreaterThanOrEqual(4);
+
+    // Verify category description updates
+    expect(
+      screen.getByText(
+        /Paddle through the mangroves and discover the fascinating birds that visit these tranquil backwaters\./i
+      )
+    ).toBeInTheDocument();
 
     // Click Golden Hour
     const ghTab = screen.getByRole("tab", { name: /^golden hour/i });
@@ -53,7 +67,7 @@ describe("GallerySection UI Component", () => {
     const allTab = screen.getByRole("tab", { name: /^all/i });
     fireEvent.click(allTab);
     const allButtons = screen.getAllByRole("button", { name: /^view photo:/i });
-    expect(allButtons.length).toBeGreaterThan(ghButtons.length);
+    expect(allButtons.length).toBeGreaterThan(wvButtons.length);
   });
 
   it("opens lightbox on image click, shows position, captions, and closes on Escape", () => {

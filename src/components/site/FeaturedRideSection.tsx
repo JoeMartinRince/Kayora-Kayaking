@@ -1,6 +1,6 @@
-import { ArrowDown, Compass, MapPin, ShieldCheck } from "lucide-react";
+import { ArrowDown, Compass, Mail, MapPin, ShieldCheck } from "lucide-react";
 import { media } from "@/config/media";
-import { whatsappLink, mangroveRideMessage } from "@/config/business";
+import { experienceEmailLink, mangroveRideMessage, whatsappLink } from "@/config/business";
 import { WhatsAppIcon } from "./icons";
 
 const ext = { target: "_blank", rel: "noopener noreferrer" } as const;
@@ -88,10 +88,19 @@ export function FeaturedRideSection() {
                   <span>Enquire on WhatsApp</span>
                 </a>
 
+                {/* Email Enquiry CTA */}
+                <a
+                  href={experienceEmailLink("Mangrove Forest Ride")}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-on-dark/30 bg-on-dark/10 px-4 py-3 text-center text-xs font-semibold text-on-dark backdrop-blur-sm transition hover:bg-on-dark/20 active:scale-95 sm:text-sm"
+                >
+                  <Mail className="h-4 w-4 shrink-0 text-mint" />
+                  <span>Email Enquiry</span>
+                </a>
+
                 {/* Secondary CTA */}
                 <a
                   href="#experiences"
-                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-on-dark/30 bg-on-dark/10 px-4 py-3 text-center text-xs font-semibold text-on-dark backdrop-blur-sm transition hover:bg-on-dark/20 active:scale-95 sm:text-sm"
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-on-dark/20 bg-transparent px-3.5 py-3 text-center text-xs font-semibold text-on-dark/80 transition hover:bg-on-dark/10 hover:text-on-dark active:scale-95 sm:text-sm"
                 >
                   <span>Explore All Rides</span>
                   <ArrowDown className="h-3.5 w-3.5 opacity-75" />

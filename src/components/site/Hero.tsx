@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, MapPin, Menu, Phone, X } from "lucide-react";
+import { ArrowRight, Mail, MapPin, Menu, Phone, X } from "lucide-react";
 import { media } from "@/config/media";
-import { business, telLink, whatsappLink } from "@/config/business";
+import { business, emailLink, telLink, whatsappLink } from "@/config/business";
 import { navLinks } from "@/config/navigation";
 import { InstagramIcon, WhatsAppIcon } from "./icons";
 
@@ -56,6 +56,13 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-2.5 lg:flex">
+          <a
+            href={emailLink()}
+            aria-label={`Email ${business.email}`}
+            className="grid h-10 w-10 place-items-center rounded-full border border-on-dark/25 text-on-dark transition hover:bg-on-dark/15 active:scale-95"
+          >
+            <Mail className="h-4 w-4" />
+          </a>
           <a
             href={telLink}
             aria-label={`Call ${business.phoneDisplay}`}
@@ -126,17 +133,23 @@ export function Header() {
             >
               <WhatsAppIcon className="h-4 w-4" /> Book on WhatsApp
             </a>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-3 gap-2">
               <a
                 href={telLink}
-                className="flex items-center justify-center gap-2 rounded-2xl border border-on-dark/20 bg-on-dark/10 px-4 py-2 text-xs font-semibold text-on-dark"
+                className="flex items-center justify-center gap-1.5 rounded-2xl border border-on-dark/20 bg-on-dark/10 px-2 py-2 text-xs font-semibold text-on-dark"
               >
                 <Phone className="h-3.5 w-3.5 text-mint" /> Call Us
               </a>
               <a
+                href={emailLink()}
+                className="flex items-center justify-center gap-1.5 rounded-2xl border border-on-dark/20 bg-on-dark/10 px-2 py-2 text-xs font-semibold text-on-dark"
+              >
+                <Mail className="h-3.5 w-3.5 text-mint" /> Email
+              </a>
+              <a
                 href={business.instagramUrl}
                 {...ext}
-                className="flex items-center justify-center gap-2 rounded-2xl border border-on-dark/20 bg-on-dark/10 px-4 py-2 text-xs font-semibold text-on-dark"
+                className="flex items-center justify-center gap-1.5 rounded-2xl border border-on-dark/20 bg-on-dark/10 px-2 py-2 text-xs font-semibold text-on-dark"
               >
                 <InstagramIcon className="h-3.5 w-3.5 text-mint" /> Instagram
               </a>
@@ -286,29 +299,36 @@ export function Hero() {
             </a>
           </div>
 
-          {/* Compact 3-card hero contact actions in one balanced row */}
-          <div className="mt-3.5 grid grid-cols-3 gap-2 sm:mt-5 sm:flex sm:gap-3">
+          {/* Responsive hero contact actions: 2-column grid on mobile, sleek pill row on tablet/desktop */}
+          <div className="mt-3.5 grid grid-cols-2 gap-2 sm:mt-5 sm:flex sm:flex-wrap sm:gap-2.5">
             <a
               href={whatsappLink()}
               {...ext}
-              className="flex flex-col items-center justify-center gap-1 rounded-xl bg-[#25D366] px-2 py-2 text-center text-[10px] font-bold text-deep shadow-sm transition hover:brightness-105 active:scale-95 sm:flex-row sm:rounded-full sm:px-4 sm:py-2.5 sm:text-xs"
+              className="flex items-center justify-center gap-1.5 rounded-xl bg-[#25D366] px-3 py-2 text-center text-xs font-bold text-deep shadow-sm transition hover:brightness-105 active:scale-95 sm:rounded-full sm:px-4 sm:py-2.5"
             >
               <WhatsAppIcon className="h-4 w-4 shrink-0" />
               <span className="truncate">WhatsApp Us</span>
             </a>
             <a
               href={telLink}
-              className="flex flex-col items-center justify-center gap-1 rounded-xl border border-on-dark/20 bg-deep/60 px-2 py-2 text-center text-[10px] font-semibold text-on-dark backdrop-blur-sm transition hover:bg-on-dark/15 active:scale-95 sm:flex-row sm:rounded-full sm:px-4 sm:py-2.5 sm:text-xs"
+              className="flex items-center justify-center gap-1.5 rounded-xl border border-on-dark/20 bg-deep/60 px-3 py-2 text-center text-xs font-semibold text-on-dark backdrop-blur-sm transition hover:bg-on-dark/15 active:scale-95 sm:rounded-full sm:px-4 sm:py-2.5"
             >
               <Phone className="h-4 w-4 shrink-0 text-mint" />
               <span className="truncate">Call Direct</span>
             </a>
             <a
+              href={emailLink()}
+              className="flex items-center justify-center gap-1.5 rounded-xl border border-on-dark/20 bg-deep/60 px-3 py-2 text-center text-xs font-semibold text-on-dark backdrop-blur-sm transition hover:bg-on-dark/15 active:scale-95 sm:rounded-full sm:px-4 sm:py-2.5"
+            >
+              <Mail className="h-4 w-4 shrink-0 text-mint" />
+              <span className="truncate">Email Enquiry</span>
+            </a>
+            <a
               href={business.instagramUrl}
               {...ext}
-              className="flex flex-col items-center justify-center gap-1 rounded-xl border border-on-dark/20 bg-deep/60 px-2 py-2 text-center text-[10px] font-semibold text-on-dark backdrop-blur-sm transition hover:bg-on-dark/15 active:scale-95 sm:flex-row sm:rounded-full sm:px-4 sm:py-2.5 sm:text-xs"
+              className="flex items-center justify-center gap-1.5 rounded-xl border border-on-dark/20 bg-deep/60 px-3 py-2 text-center text-xs font-semibold text-on-dark backdrop-blur-sm transition hover:bg-on-dark/15 active:scale-95 sm:rounded-full sm:px-4 sm:py-2.5"
             >
-              <span className="grid h-4 w-4 place-items-center rounded bg-instagram">
+              <span className="grid h-4 w-4 shrink-0 place-items-center rounded bg-instagram">
                 <InstagramIcon className="h-3 w-3" />
               </span>
               <span className="truncate">Instagram</span>

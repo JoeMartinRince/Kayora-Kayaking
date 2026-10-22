@@ -1,6 +1,6 @@
-import { Phone, ArrowUpRight } from "lucide-react";
+import { Phone, ArrowUpRight, Mail } from "lucide-react";
 import { media } from "@/config/media";
-import { business, telLink, whatsappLink } from "@/config/business";
+import { business, emailLink, telLink, whatsappLink } from "@/config/business";
 import { WhatsAppIcon, InstagramIcon } from "./icons";
 
 const ext = { target: "_blank", rel: "noopener noreferrer" } as const;
@@ -34,11 +34,11 @@ export function FinalCtaSection() {
               quickly around sunrise and sunset—reach out to reserve your kayak today.
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
               <a
                 href={whatsappLink("Hi Kayora! I'd like to book a kayaking tour in Kochi.")}
                 {...ext}
-                className="inline-flex items-center gap-2.5 rounded-full bg-whatsapp px-8 py-4 text-base font-bold text-deep shadow-glow transition hover:scale-105 active:scale-95"
+                className="inline-flex items-center gap-2.5 rounded-full bg-whatsapp px-7 py-3.5 text-sm font-bold text-deep shadow-glow transition hover:scale-105 active:scale-95 sm:px-8 sm:py-4 sm:text-base"
               >
                 <WhatsAppIcon className="h-5 w-5" />
                 <span>Book on WhatsApp</span>
@@ -46,10 +46,18 @@ export function FinalCtaSection() {
 
               <a
                 href={telLink}
-                className="inline-flex items-center gap-2 rounded-full border border-on-dark/30 bg-on-dark/10 px-7 py-4 text-base font-bold text-on-dark backdrop-blur-sm transition hover:bg-on-dark/20 active:scale-95"
+                className="inline-flex items-center gap-2 rounded-full border border-on-dark/30 bg-on-dark/10 px-6 py-3.5 text-sm font-bold text-on-dark backdrop-blur-sm transition hover:bg-on-dark/20 active:scale-95 sm:px-7 sm:py-4 sm:text-base"
               >
                 <Phone className="h-4 w-4 text-mint" />
                 <span>Call {business.phoneDisplay}</span>
+              </a>
+
+              <a
+                href={emailLink()}
+                className="inline-flex items-center gap-2 rounded-full border border-on-dark/30 bg-on-dark/10 px-6 py-3.5 text-sm font-bold text-on-dark backdrop-blur-sm transition hover:bg-on-dark/20 active:scale-95 sm:px-7 sm:py-4 sm:text-base"
+              >
+                <Mail className="h-4 w-4 text-mint" />
+                <span>Email Enquiry</span>
               </a>
             </div>
 

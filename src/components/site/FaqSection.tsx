@@ -5,7 +5,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { whatsappLink } from "@/config/business";
+import { emailLink, whatsappLink } from "@/config/business";
 
 const faqs = [
   {
@@ -41,7 +41,7 @@ const faqs = [
   {
     question: "How do I secure my booking?",
     answer:
-      "Click 'Book on WhatsApp' or call us. Share your preferred date, tour type, and group size. We verify tide timings and availability, then confirm your booking directly.",
+      "Click 'Book on WhatsApp', call us, or send an email enquiry. Share your preferred date, tour type, and group size. We verify tide timings and availability, then confirm your booking directly.",
   },
 ];
 
@@ -92,6 +92,17 @@ export function FaqSection() {
           >
             Ask us on WhatsApp
           </a>
+          <span> or </span>
+          <a
+            href={emailLink({
+              subject: "Kayaking Question – Kayora Kochi",
+              body: "Hi Kayora Kayaking, I have a question regarding your kayaking tours:",
+            })}
+            className="font-bold text-deep underline hover:text-forest"
+          >
+            email us directly
+          </a>
+          .
         </div>
       </div>
     </section>

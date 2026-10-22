@@ -1,6 +1,6 @@
-import { Clock, Sun, MessageCircle, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Clock, Mail, Sun } from "lucide-react";
 import { experiences } from "@/config/experiences";
-import { whatsappLink, experienceMessage } from "@/config/business";
+import { experienceEmailLink, experienceMessage, whatsappLink } from "@/config/business";
 import { WhatsAppIcon } from "./icons";
 
 const ext = { target: "_blank", rel: "noopener noreferrer" } as const;
@@ -86,15 +86,25 @@ export function ExperiencesSection() {
                       </span>
                     </div>
 
-                    <a
-                      href={bookingUrl}
-                      {...ext}
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-deep px-5 py-3 text-sm font-bold text-on-dark shadow-sm transition hover:bg-forest active:scale-95"
-                    >
-                      <WhatsAppIcon className="h-4 w-4 text-whatsapp" />
-                      <span>Book This Experience</span>
-                      <ArrowUpRight className="h-4 w-4 opacity-70 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                    </a>
+                    <div className="flex items-center gap-2">
+                      <a
+                        href={bookingUrl}
+                        {...ext}
+                        className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-deep px-4 py-3 text-sm font-bold text-on-dark shadow-sm transition hover:bg-forest active:scale-95"
+                      >
+                        <WhatsAppIcon className="h-4 w-4 shrink-0 text-whatsapp" />
+                        <span className="truncate">Book Experience</span>
+                        <ArrowUpRight className="h-4 w-4 shrink-0 opacity-70 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                      </a>
+                      <a
+                        href={experienceEmailLink(exp.name)}
+                        aria-label={`Email enquiry for ${exp.name}`}
+                        title={`Email enquiry for ${exp.name}`}
+                        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-background text-deep shadow-sm transition hover:border-forest/40 hover:bg-mint/40 hover:text-forest active:scale-95"
+                      >
+                        <Mail className="h-4 w-4" />
+                      </a>
+                    </div>
                   </div>
                 </div>
               </article>

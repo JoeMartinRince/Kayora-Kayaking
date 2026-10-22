@@ -1,5 +1,5 @@
-import { Phone, MapPin, Navigation, ArrowUpRight } from "lucide-react";
-import { business, telLink, whatsappLink } from "@/config/business";
+import { ArrowUpRight, Mail, MapPin, Navigation, Phone } from "lucide-react";
+import { business, emailLink, telLink, whatsappLink } from "@/config/business";
 import { navLinks } from "@/config/navigation";
 import { media } from "@/config/media";
 import { WhatsAppIcon, InstagramIcon } from "./icons";
@@ -56,6 +56,13 @@ export function Footer() {
               >
                 <Phone className="h-4 w-4" />
               </a>
+              <a
+                href={emailLink()}
+                aria-label={`Email ${business.email}`}
+                className="grid h-10 w-10 place-items-center rounded-full border border-border bg-mint/40 text-deep transition hover:bg-deep hover:text-on-dark"
+              >
+                <Mail className="h-4 w-4" />
+              </a>
             </div>
           </div>
 
@@ -91,6 +98,13 @@ export function Footer() {
                 <Phone className="h-4 w-4 shrink-0 text-forest" />
                 <a href={telLink} className="font-semibold text-deep hover:underline">
                   {business.phoneDisplay}
+                </a>
+              </p>
+
+              <p className="flex items-center gap-2.5">
+                <Mail className="h-4 w-4 shrink-0 text-forest" />
+                <a href={emailLink()} className="font-semibold text-deep hover:underline break-all">
+                  {business.email}
                 </a>
               </p>
 

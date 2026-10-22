@@ -1,5 +1,5 @@
-import { MapPin, Navigation, Car, Clock, Phone } from "lucide-react";
-import { business, telLink } from "@/config/business";
+import { MapPin, Navigation, Car, Clock, Phone, Mail } from "lucide-react";
+import { business, emailLink, telLink } from "@/config/business";
 
 const ext = { target: "_blank", rel: "noopener noreferrer" } as const;
 
@@ -103,19 +103,32 @@ export function LocationSection() {
               </p>
             </div>
 
-            <div className="mt-8 rounded-2xl bg-on-dark/10 p-5 backdrop-blur-xs">
-              <p className="text-xs font-semibold text-sage">Call Direct Line</p>
-              <a
-                href={telLink}
-                className="mt-1 flex items-center gap-2 text-xl font-extrabold text-on-dark hover:text-mint"
-              >
-                <Phone className="h-5 w-5 text-whatsapp" />
-                <span>{business.phoneDisplay}</span>
-              </a>
+            <div className="mt-8 space-y-3">
+              <div className="rounded-2xl bg-on-dark/10 p-4 sm:p-5 backdrop-blur-xs">
+                <p className="text-xs font-semibold text-sage">Call Direct Line</p>
+                <a
+                  href={telLink}
+                  className="mt-1 flex items-center gap-2 text-lg sm:text-xl font-extrabold text-on-dark hover:text-mint"
+                >
+                  <Phone className="h-5 w-5 text-whatsapp shrink-0" />
+                  <span>{business.phoneDisplay}</span>
+                </a>
+              </div>
+
+              <div className="rounded-2xl bg-on-dark/10 p-4 sm:p-5 backdrop-blur-xs">
+                <p className="text-xs font-semibold text-sage">Email Enquiries</p>
+                <a
+                  href={emailLink()}
+                  className="mt-1 flex items-center gap-2 text-base sm:text-lg font-bold text-on-dark hover:text-mint break-all"
+                >
+                  <Mail className="h-5 w-5 text-mint shrink-0" />
+                  <span>{business.email}</span>
+                </a>
+              </div>
             </div>
 
             <div className="mt-6 text-xs text-on-dark/60">
-              Launch point coordinates and parking details are also shared via WhatsApp upon
+              Launch point coordinates and parking details are also shared via WhatsApp or email upon
               enquiry.
             </div>
           </div>

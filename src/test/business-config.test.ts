@@ -5,13 +5,16 @@ import {
   experienceMessage,
   mangroveRideMessage,
   telLink,
+  emailLink,
+  experienceEmailLink,
 } from "@/config/business";
 import { experiences, stats } from "@/config/experiences";
 
 describe("Business Configuration & Helpers", () => {
-  it("has valid business phone and contact details", () => {
+  it("has valid business phone, email, and contact details", () => {
     expect(business.phone).toBe("+917736629393");
     expect(business.whatsapp).toBe("917736629393");
+    expect(business.email).toBe("kayorakayaking@gmail.com");
     expect(telLink).toBe("tel:+917736629393");
     expect(business.instagramUrl).toBe(
       "https://www.instagram.com/kayora_kayaking_kochi?srtk=MTN5MDIzOWZ1NGx4cQ=="
@@ -38,6 +41,26 @@ describe("Business Configuration & Helpers", () => {
     expect(mangroveRideMessage).toBe(
       "Hi Kayora Kayaking! I'm interested in the Mangrove Forest Ride. Could you share the price, duration, launch location, and available slots?"
     );
+  });
+
+  it("generates properly formatted mailto URLs with encoded subject and body", () => {
+    const defaultMailto = emailLink();
+    expect(defaultMailto).toContain("mailto:kayorakayaking@gmail.com");
+    expect(defaultMailto).toContain("subject=" + encodeURIComponent("Kayaking Enquiry – Kayora Kochi"));
+    expect(defaultMailto).toContain("body=");
+
+    const customMailto = emailLink({
+      subject: "Custom Subject",
+      body: "Custom Body Message",
+    });
+    expect(customMailto).toBe(
+      `mailto:kayorakayaking@gmail.com?subject=Custom%20Subject&body=Custom%20Body%20Message`
+    );
+
+    const expMailto = experienceEmailLink("Sunrise Session");
+    expect(expMailto).toContain("mailto:kayorakayaking@gmail.com");
+    expect(expMailto).toContain("subject=" + encodeURIComponent("Sunrise Session Enquiry – Kayora Kochi"));
+    expect(expMailto).toContain(encodeURIComponent("Sunrise Session"));
   });
 
   it("contains all 4 experiences with local assets including the signature ride", () => {

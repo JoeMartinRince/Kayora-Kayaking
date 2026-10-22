@@ -8,6 +8,10 @@ export const business = {
   tagline: "Kerala's Premier Kayaking Experience", // VERIFIED
   phoneDisplay: "+91 77366 29393", // VERIFIED
   phone: "+917736629393", // VERIFIED
+  email: "kayorakayaking@gmail.com",
+  defaultEmailSubject: "Kayaking Enquiry – Kayora Kochi",
+  defaultEmailBody:
+    "Hi Kayora Kayaking, I'd like to know more about your kayaking experiences, packages, and available slots.",
   // PLACEHOLDER: assumed to be the same number as the phone line — confirm WhatsApp is active on it.
   whatsapp: "917736629393",
   // VERIFIED: official Instagram profile
@@ -35,6 +39,29 @@ export function experienceMessage(name: string) {
 // Prefilled enquiry message for the featured signature Mangrove Forest Ride
 export const mangroveRideMessage =
   "Hi Kayora Kayaking! I'm interested in the Mangrove Forest Ride. Could you share the price, duration, launch location, and available slots?";
+
+/**
+ * Builds a standardized mailto: URL with prefilled recipient, subject, and body.
+ */
+export function emailLink(options?: { subject?: string; body?: string }) {
+  const subject = options?.subject ?? business.defaultEmailSubject;
+  const body = options?.body ?? business.defaultEmailBody;
+  const queryParts: string[] = [];
+  if (subject) queryParts.push(`subject=${encodeURIComponent(subject)}`);
+  if (body) queryParts.push(`body=${encodeURIComponent(body)}`);
+  const queryString = queryParts.length > 0 ? `?${queryParts.join("&")}` : "";
+  return `mailto:${business.email}${queryString}`;
+}
+
+/**
+ * Builds a mailto: URL prefilled for a specific kayaking experience / ride.
+ */
+export function experienceEmailLink(experienceName: string) {
+  return emailLink({
+    subject: `${experienceName} Enquiry – Kayora Kochi`,
+    body: `Hi Kayora Kayaking, I'd like to know more about the ${experienceName} experience, available timings, and slots.`,
+  });
+}
 
 export type Experience = {
   id: string;

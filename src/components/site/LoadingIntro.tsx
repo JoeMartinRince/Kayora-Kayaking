@@ -75,6 +75,9 @@ export function LoadingIntro() {
             src={media.officeWelcome}
             alt="Kayora Kayaking Office in Kadamakkudy with colorful kayaks"
             fetchPriority="high"
+            decoding="async"
+            width="1200"
+            height="1600"
             className="h-full w-full object-cover will-change-transform"
             style={{
               objectPosition: "50% 35%",
@@ -133,6 +136,9 @@ export function LoadingIntro() {
           <img
             src={media.emblemLogo}
             alt="Kayora Kayaking Kochi Emblem"
+            width="240"
+            height="240"
+            decoding="async"
             className="h-auto w-40 max-h-[38vh] max-w-[68vw] object-contain drop-shadow-[0_10px_28px_rgba(0,0,0,0.55)] sm:w-52 md:w-56 lg:w-60"
             style={{
               animation: "logo-intro 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both",

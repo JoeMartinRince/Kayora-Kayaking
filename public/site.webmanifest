@@ -1,0 +1,22 @@
+{
+  "name": "Kayora Kayaking Kochi",
+  "short_name": "Kayora",
+  "description": "Kerala's Premier Kayaking Experience in Kadamakkudy, Kochi",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#123D40",
+  "theme_color": "#123D40",
+  "icons": [
+    {
+      "src": "/assets/kayora-emblem.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    }
+  ]
+}

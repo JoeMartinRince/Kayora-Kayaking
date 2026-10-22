@@ -36,6 +36,9 @@ export function Header() {
           <img
             src={media.logo}
             alt="Kayora Kayaking Kochi"
+            width="40"
+            height="40"
+            decoding="async"
             className="h-9 w-9 shrink-0 rounded-full object-cover object-top ring-2 ring-on-dark/30 sm:h-10 sm:w-10"
           />
           <span className="truncate text-base font-extrabold tracking-tight sm:text-lg">
@@ -225,7 +228,10 @@ export function Hero() {
     >
       <img
         src={media.heroPoster}
-        alt="Kayaking in Kochi backwaters at dawn"
+        alt="Sunrise kayaking in Kochi backwaters at dawn with Kayora Kayaking"
+        width="1920"
+        height="1080"
+        decoding="async"
         className="absolute inset-0 -z-20 h-full w-full object-cover"
         fetchPriority="high"
       />
@@ -276,9 +282,9 @@ export function Hero() {
             <span className="text-mint">Follow the Water.</span>
           </h1>
 
-          {/* Compact 2-3 line hero description */}
+          {/* Compact 2-3 line hero description optimized for local SEO */}
           <p className="mt-2.5 max-w-xl text-sm leading-relaxed text-on-dark/85 sm:mt-4 sm:text-base lg:text-lg">
-            Escape into Kochi&apos;s serene backwaters. Paddle through lush mangroves and discover Kerala from a new perspective.
+            Escape into Kochi&apos;s serene backwaters with Kayora Kayaking in Kadamakkudy. Paddle through lush mangroves, peaceful sunrise calm, and tranquil sunset waterways.
           </p>
 
           {/* Refined CTA buttons sharing identical glassmorphism styling */}

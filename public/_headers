@@ -1,0 +1,27 @@
+# Static assets with content hashing or immutable nature
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+  X-Content-Type-Options: nosniff
+
+# Manifest and icons
+/site.webmanifest
+  Cache-Control: public, max-age=604800
+  Content-Type: application/manifest+json; charset=utf-8
+
+/favicon.ico
+  Cache-Control: public, max-age=604800
+
+# Sitemap and Robots
+/sitemap.xml
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+  Content-Type: application/xml; charset=utf-8
+
+/robots.txt
+  Cache-Control: public, max-age=86400
+
+# HTML pages and general responses
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()

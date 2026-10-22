@@ -39,6 +39,9 @@ export function ExperiencesSection() {
                     src={exp.image}
                     alt={`${exp.name} - Kayora Kayaking Kochi`}
                     loading="lazy"
+                    decoding="async"
+                    width="600"
+                    height="450"
                     style={{ objectPosition: exp.objectPosition || "center" }}
                     className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   />

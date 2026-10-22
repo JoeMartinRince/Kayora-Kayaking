@@ -207,6 +207,9 @@ export function GallerySection() {
                 src={photo.src}
                 alt={photo.alt}
                 loading="lazy"
+                decoding="async"
+                width="400"
+                height="400"
                 className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-deep/85 via-deep/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100" />

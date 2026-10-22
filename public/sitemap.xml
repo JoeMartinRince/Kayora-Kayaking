@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://www.kayorakayakingkochi.com/</loc>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://www.kayorakayakingkochi.com/assets/mangrove-forest-ride.jpeg</image:loc>
+      <image:title>Mangrove Forest Kayaking in Kochi</image:title>
+      <image:caption>Kayakers paddling through serene mangrove waterways of Kadamakkudy, Kochi at sunset</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.kayorakayakingkochi.com/assets/paddle-morning.jpg</image:loc>
+      <image:title>Sunrise Kayaking in Kadamakkudy Kochi</image:title>
+      <image:caption>Morning kayaking experience in the calm backwaters of Kochi, Kerala</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.kayorakayakingkochi.com/assets/office-welcome.png</image:loc>
+      <image:title>Kayora Kayaking Office and Launch Site</image:title>
+      <image:caption>Kayora Kayaking launch site at Kadamakkudy, Pizhala, Kochi</image:caption>
+    </image:image>
+  </url>
+</urlset>

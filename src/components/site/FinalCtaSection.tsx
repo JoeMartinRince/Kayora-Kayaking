@@ -16,6 +16,9 @@ export function FinalCtaSection() {
             alt="Scenic backwaters of Kochi at dusk"
             className="absolute inset-0 -z-20 h-full w-full object-cover"
             loading="lazy"
+            decoding="async"
+            width="1920"
+            height="800"
           />
           {/* Dark Overlay Gradient */}
           <div className="absolute inset-0 -z-10 bg-gradient-to-t from-deep via-deep/85 to-deep/75" />

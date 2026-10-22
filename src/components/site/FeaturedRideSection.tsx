@@ -30,6 +30,9 @@ export function FeaturedRideSection() {
                 src={media.mangroveForestRide}
                 alt="Kayakers paddling through the mangrove waterways of Kochi at sunset"
                 loading="lazy"
+                decoding="async"
+                width="800"
+                height="1000"
                 style={{ objectPosition: "50% 52%" }}
                 className="h-full w-full object-cover transition-transform duration-700 ease-out hover:scale-105"
               />

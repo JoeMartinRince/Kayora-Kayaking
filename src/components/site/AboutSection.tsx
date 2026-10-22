@@ -24,6 +24,9 @@ export function AboutSection() {
                   alt="Kayakers paddling through lush mangrove tunnel in Kochi"
                   className="aspect-4/5 w-full object-cover"
                   loading="lazy"
+                  decoding="async"
+                  width="600"
+                  height="750"
                 />
               </div>
 

@@ -12,22 +12,96 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { business } from "@/config/business";
+
+const siteTitle = "Kayora Kayaking Kochi | Kayaking in Kadamakkudy & Mangroves";
+const siteDescription =
+  "Experience guided kayaking in the serene backwaters of Kadamakkudy, Kochi. Sunrise paddling, sunset drifts, and mangrove forest kayaking tours with certified safety standards.";
+const siteKeywords =
+  "Kayaking in Kochi, Kayaking in Kadamakkudy, Mangrove kayaking in Kochi, Sunrise kayaking in Kochi, Sunset kayaking in Kochi, Birdwatching during mangrove kayaking, Kayora Kayaking";
+const canonicalUrl = business.websiteUrl;
+const previewImageUrl = `${business.websiteUrl}assets/mangrove-forest-ride.jpeg`;
+
+export const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": ["LocalBusiness", "SportsActivityLocation"],
+      "@id": `${business.websiteUrl}#business`,
+      name: "Kayora Kayaking",
+      alternateName: business.fullName,
+      url: business.websiteUrl,
+      logo: `${business.websiteUrl}assets/kayora-emblem.png`,
+      image: [
+        `${business.websiteUrl}assets/mangrove-forest-ride.jpeg`,
+        `${business.websiteUrl}assets/office-welcome.png`,
+        `${business.websiteUrl}assets/paddle-morning.jpg`,
+      ],
+      description:
+        "Kayora Kayaking offers guided backwater kayaking tours in Kadamakkudy, Kochi, Kerala. Offering sunrise paddling, sunset drifts, mangrove forest tours, and birdwatching kayaking experiences with certified safety equipment.",
+      telephone: business.phone,
+      email: business.email,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Kadamakkudy, Pizhala",
+        addressLocality: "Kochi",
+        addressRegion: "Kerala",
+        postalCode: "682027",
+        addressCountry: "IN",
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: 10.0658,
+        longitude: 76.2572,
+      },
+      hasMap: business.launchPointMapUrl,
+      sameAs: [business.instagramUrl, business.launchPointMapUrl],
+      currenciesAccepted: "INR",
+      paymentAccepted: "Cash, UPI",
+      areaServed: [
+        { "@type": "City", name: "Kochi" },
+        { "@type": "AdministrativeArea", name: "Kadamakkudy" },
+        { "@type": "AdministrativeArea", name: "Kerala" },
+      ],
+      knowsAbout: [
+        "Kayaking in Kochi",
+        "Kayaking in Kadamakkudy",
+        "Mangrove kayaking in Kochi",
+        "Sunrise kayaking in Kochi",
+        "Sunset kayaking in Kochi",
+        "Birdwatching during mangrove kayaking in Kochi",
+      ],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${business.websiteUrl}#website`,
+      url: business.websiteUrl,
+      name: "Kayora Kayaking",
+      description: business.tagline,
+      publisher: {
+        "@id": `${business.websiteUrl}#business`,
+      },
+      inLanguage: "en",
+    },
+  ],
+};
 
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
+        <p className="text-sm font-bold tracking-widest text-forest uppercase">Error</p>
+        <h1 className="mt-2 text-7xl font-extrabold text-foreground">404</h1>
         <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+          The page you&apos;re looking for doesn&apos;t exist or has been moved.
         </p>
         <div className="mt-6">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center justify-center rounded-full bg-deep px-5 py-2.5 text-sm font-bold text-on-dark transition-colors hover:bg-forest"
           >
-            Go home
+            Go home to Kayora Kayaking
           </Link>
         </div>
       </div>
@@ -46,7 +120,7 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
+          This page didn&apos;t load
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Something went wrong on our end. You can try refreshing or head back home.
@@ -77,43 +151,73 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Kayora Kayaking Kochi | Explore Kerala's Backwaters" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+      { title: siteTitle },
       {
         name: "description",
-        content:
-          "Experience guided kayaking in the serene backwaters of Kadamakkudy, Kochi. Sunrise, mangrove explorer, and sunset paddle sessions with certified safety standards.",
+        content: siteDescription,
       },
-      { name: "author", content: "Kayora Kayaking Kochi" },
+      { name: "keywords", content: siteKeywords },
+      { name: "author", content: "Kayora Kayaking" },
+      {
+        name: "robots",
+        content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
+      },
+      { name: "theme-color", content: "#123D40" },
+      { name: "geo.region", content: "IN-KL" },
+      { name: "geo.placename", content: "Kadamakkudy, Kochi, Kerala" },
+      { name: "geo.position", content: "10.0658;76.2572" },
+      { name: "ICBM", content: "10.0658, 76.2572" },
+      {
+        property: "og:site_name",
+        content: "Kayora Kayaking",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: canonicalUrl },
       {
         property: "og:title",
-        content: "Kayora Kayaking Kochi | Explore Kerala's Backwaters",
+        content: siteTitle,
       },
       {
         property: "og:description",
-        content:
-          "Experience guided kayaking in the serene backwaters of Kadamakkudy, Kochi. Sunrise, mangrove explorer, and sunset paddle sessions with certified safety standards.",
+        content: siteDescription,
       },
-      { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://www.kayorakayakingkochi.com/" },
-      { property: "og:image", content: "/assets/paddle-morning.jpg" },
+      { property: "og:image", content: previewImageUrl },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "800" },
+      {
+        property: "og:image:alt",
+        content:
+          "Kayakers paddling through serene mangrove waterways of Kadamakkudy, Kochi at sunset",
+      },
+      { property: "og:locale", content: "en_IN" },
       { name: "twitter:card", content: "summary_large_image" },
       {
         name: "twitter:title",
-        content: "Kayora Kayaking Kochi | Explore Kerala's Backwaters",
+        content: siteTitle,
       },
       {
         name: "twitter:description",
-        content: "Experience guided kayaking in the serene backwaters of Kadamakkudy, Kochi.",
+        content: siteDescription,
       },
-      { name: "twitter:image", content: "/assets/paddle-morning.jpg" },
+      { name: "twitter:image", content: previewImageUrl },
+      {
+        name: "twitter:image:alt",
+        content: "Kayora Kayaking tour through Kadamakkudy mangroves in Kochi",
+      },
     ],
     links: [
+      { rel: "canonical", href: canonicalUrl },
       {
         rel: "stylesheet",
         href: appCss,
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/assets/kayora-emblem.png", type: "image/png" },
+      { rel: "apple-touch-icon", href: "/assets/kayora-emblem.png" },
+      { rel: "manifest", href: "/site.webmanifest" },
+      { rel: "preconnect", href: "https://res.cloudinary.com" },
+      { rel: "dns-prefetch", href: "https://res.cloudinary.com" },
     ],
   }),
   shellComponent: RootShell,
@@ -127,6 +231,10 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
       </head>
       <body>
         {children}

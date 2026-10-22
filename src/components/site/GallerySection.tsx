@@ -3,6 +3,8 @@ import { Camera, X, ZoomIn, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   getGalleryPhotos,
   galleryCategories,
+  getCategoryBadgeLabel,
+  getCategoryLightboxLabel,
   type GalleryCategory,
   type GalleryPhoto,
 } from "@/lib/gallery";
@@ -20,11 +22,18 @@ export function GallerySection() {
 
   // Compute category counts
   const categoryCounts = useMemo(() => {
-    const counts = { all: allPhotos.length, sunrise: 0, sunset: 0, mangrove: 0 };
+    const counts: Record<GalleryCategory, number> = {
+      all: allPhotos.length,
+      sunrise: 0,
+      sunset: 0,
+      mangrove: 0,
+      "golden-hour": 0,
+      "happy-guests": 0,
+    };
     for (const p of allPhotos) {
-      if (p.category === "sunrise") counts.sunrise++;
-      else if (p.category === "sunset") counts.sunset++;
-      else if (p.category === "mangrove") counts.mangrove++;
+      if (p.category in counts && p.category !== "all") {
+        counts[p.category as Exclude<GalleryCategory, "all">]++;
+      }
     }
     return counts;
   }, [allPhotos]);
@@ -137,43 +146,45 @@ export function GallerySection() {
           </p>
 
           {/* Category Filter Buttons */}
-          <div
-            role="tablist"
-            aria-label="Gallery category filters"
-            className="mt-8 flex flex-wrap items-center justify-center gap-2 sm:gap-2.5"
-          >
-            {galleryCategories.map((c) => {
-              const isActive = activeCategory === c.key;
-              const count = categoryCounts[c.key];
+          <div className="mt-8 -mx-4 px-4 sm:mx-0 sm:px-0">
+            <div
+              role="tablist"
+              aria-label="Gallery category filters"
+              className="flex items-center gap-2 overflow-x-auto py-1 no-scrollbar sm:flex-wrap sm:justify-center sm:gap-2.5"
+            >
+              {galleryCategories.map((c) => {
+                const isActive = activeCategory === c.key;
+                const count = categoryCounts[c.key] ?? 0;
 
-              return (
-                <button
-                  key={c.key}
-                  role="tab"
-                  aria-selected={isActive}
-                  aria-controls="gallery-grid"
-                  type="button"
-                  onClick={() => {
-                    setActiveCategory(c.key);
-                    setActiveLightboxIndex(null);
-                  }}
-                  className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold transition-all active:scale-95 sm:px-5 sm:py-2.5 sm:text-sm ${
-                    isActive
-                      ? "bg-deep text-on-dark shadow-sm ring-1 ring-forest/30"
-                      : "border border-border/80 bg-card text-deep hover:bg-mint/40 hover:text-deep"
-                  }`}
-                >
-                  <span>{c.label}</span>
-                  <span
-                    className={`rounded-full px-1.5 py-0.5 text-[10px] font-semibold transition-colors ${
-                      isActive ? "bg-on-dark/20 text-on-dark" : "bg-deep/10 text-deep"
+                return (
+                  <button
+                    key={c.key}
+                    role="tab"
+                    aria-selected={isActive}
+                    aria-controls="gallery-grid"
+                    type="button"
+                    onClick={() => {
+                      setActiveCategory(c.key);
+                      setActiveLightboxIndex(null);
+                    }}
+                    className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap transition-all active:scale-95 sm:px-5 sm:py-2.5 sm:text-sm ${
+                      isActive
+                        ? "bg-deep text-on-dark shadow-sm ring-1 ring-forest/30"
+                        : "border border-border/80 bg-card text-deep hover:bg-mint/40 hover:text-deep"
                     }`}
                   >
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
+                    <span>{c.label}</span>
+                    <span
+                      className={`rounded-full px-1.5 py-0.5 text-[10px] font-semibold transition-colors ${
+                        isActive ? "bg-on-dark/20 text-on-dark" : "bg-deep/10 text-deep"
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
@@ -204,7 +215,7 @@ export function GallerySection() {
                   {photo.caption}
                 </p>
                 <p className="mt-0.5 text-[10px] sm:text-xs text-mint/90 capitalize">
-                  {photo.category === "general" ? "Moments" : photo.category}
+                  {getCategoryBadgeLabel(photo.category)}
                 </p>
               </div>
 
@@ -309,9 +320,7 @@ export function GallerySection() {
                 {currentPhoto.caption}
               </h3>
               <p className="mt-0.5 text-xs text-mint/90 capitalize">
-                {currentPhoto.category === "general"
-                  ? "Kayora Experience"
-                  : `${currentPhoto.category} Session`}
+                {getCategoryLightboxLabel(currentPhoto.category)}
               </p>
             </div>
           </div>

@@ -4,33 +4,56 @@ import { GallerySection } from "@/components/site/GallerySection";
 import { business } from "@/config/business";
 
 describe("GallerySection UI Component", () => {
-  it("renders category filters and initial All tab with photo counts", () => {
+  it("renders all six category filters in order with initial photo counts", () => {
     render(<GallerySection />);
 
-    expect(screen.getByRole("tab", { name: /all/i })).toBeInTheDocument();
-    expect(screen.getByRole("tab", { name: /sunrise/i })).toBeInTheDocument();
-    expect(screen.getByRole("tab", { name: /sunset/i })).toBeInTheDocument();
-    expect(screen.getByRole("tab", { name: /mangrove/i })).toBeInTheDocument();
+    const tabs = screen.getAllByRole("tab");
+    expect(tabs.length).toBe(6);
 
-    // Verify all photos are rendered initially
+    expect(screen.getByRole("tab", { name: /^all/i })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /^sunrise/i })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /^sunset/i })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /^mangrove/i })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /^golden hour/i })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /^happy guests/i })).toBeInTheDocument();
+
+    // Verify all photos are rendered initially under 'All'
     const buttons = screen.getAllByRole("button", { name: /^view photo:/i });
     expect(buttons.length).toBeGreaterThan(0);
   });
 
-  it("filters photos by category when tab clicked", () => {
+  it("filters photos by category when tabs are clicked including Golden Hour and Happy Guests", () => {
     render(<GallerySection />);
 
-    const sunriseTab = screen.getByRole("tab", { name: /sunrise/i });
+    // Click Sunrise
+    const sunriseTab = screen.getByRole("tab", { name: /^sunrise/i });
     fireEvent.click(sunriseTab);
-
     const sunriseButtons = screen.getAllByRole("button", { name: /^view photo:/i });
     expect(sunriseButtons.length).toBeGreaterThan(0);
 
-    const mangroveTab = screen.getByRole("tab", { name: /mangrove/i });
+    // Click Mangrove
+    const mangroveTab = screen.getByRole("tab", { name: /^mangrove/i });
     fireEvent.click(mangroveTab);
-
     const mangroveButtons = screen.getAllByRole("button", { name: /^view photo:/i });
     expect(mangroveButtons.length).toBeGreaterThan(0);
+
+    // Click Golden Hour
+    const ghTab = screen.getByRole("tab", { name: /^golden hour/i });
+    fireEvent.click(ghTab);
+    const ghButtons = screen.getAllByRole("button", { name: /^view photo:/i });
+    expect(ghButtons.length).toBeGreaterThan(0);
+
+    // Click Happy Guests
+    const hgTab = screen.getByRole("tab", { name: /^happy guests/i });
+    fireEvent.click(hgTab);
+    const hgButtons = screen.getAllByRole("button", { name: /^view photo:/i });
+    expect(hgButtons.length).toBeGreaterThan(0);
+
+    // Return to All
+    const allTab = screen.getByRole("tab", { name: /^all/i });
+    fireEvent.click(allTab);
+    const allButtons = screen.getAllByRole("button", { name: /^view photo:/i });
+    expect(allButtons.length).toBeGreaterThan(ghButtons.length);
   });
 
   it("opens lightbox on image click, shows position, captions, and closes on Escape", () => {

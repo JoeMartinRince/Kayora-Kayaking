@@ -1,20 +1,26 @@
 /**
  * Gallery Image Discovery & Categorization Module
  *
- * Automatically discovers images from src/Gallery/ (and public/assets/gallery/)
+ * Automatically discovers images from src/Gallery/ and public/assets/gallery/
  * using Vite's import.meta.glob().
- * Categorizes photos by filename (Sunrise, Sunset, Mangrove, General).
+ * Categorizes photos by filename (Sunrise, Sunset, Mangrove, Golden Hour, Happy Guests).
  * Sorts naturally (Sunrise 1, Sunrise 2, Sunrise 10).
  * Provides concise 1-3 word captions.
  */
 
-export type GalleryCategory = "all" | "sunrise" | "sunset" | "mangrove" | "general";
+export type GalleryCategory =
+  | "all"
+  | "sunrise"
+  | "sunset"
+  | "mangrove"
+  | "golden-hour"
+  | "happy-guests";
 
 export interface GalleryPhoto {
   id: string;
   filename: string;
   src: string;
-  category: "sunrise" | "sunset" | "mangrove" | "general";
+  category: "sunrise" | "sunset" | "mangrove" | "golden-hour" | "happy-guests" | "general";
   caption: string;
   alt: string;
 }
@@ -31,6 +37,10 @@ export const captionMap: Record<string, string> = {
   "sunrise (2)": "Morning Paddle",
   "sunrise 3": "Sunrise Ride",
   "sunrise (3)": "Sunrise Ride",
+  "sunrise 4": "Dawn Waterway",
+  "sunrise (4)": "Dawn Waterway",
+  "sunrise 11": "Morning Calm",
+  "sunrise 12": "Sunrise Horizon",
 
   // Sunset
   "sunset 1": "Sunset Glow",
@@ -39,6 +49,9 @@ export const captionMap: Record<string, string> = {
   "sunset (2)": "Evening Paddle",
   "sunset 3": "Twilight Drift",
   "sunset (3)": "Twilight Drift",
+  "sunset 4": "Crimson Waters",
+  "sunset 7": "Twilight Horizon",
+  "sunset 11": "Dusk Reflections",
 
   // Mangrove
   "mangrove 1": "Mangrove Trail",
@@ -51,22 +64,54 @@ export const captionMap: Record<string, string> = {
   "mangrove (4)": "Secret Passage",
   "mangrove 5": "Quiet Channel",
   "mangrove (5)": "Quiet Channel",
-  "mangrove 6": "Emerald Waters",
-  "mangrove (6)": "Emerald Waters",
+  "mangrove 11": "Emerald Waters",
 
-  // General / Other / Photo
-  "photo 1": "Kayora Moments",
-  "photo (1)": "Kayora Moments",
-  "photo 2": "Water Memories",
-  "photo (2)": "Water Memories",
-  "other 1": "Kayora Moments",
-  "other (1)": "Kayora Moments",
-  "other 2": "Water Memories",
-  "other (2)": "Water Memories",
-  "other 3": "Backwater Echoes",
-  "other (3)": "Backwater Echoes",
-  "other 4": "Island Passage",
-  "other (4)": "Island Passage",
+  // Golden Hour
+  "golden hour 1": "Golden Reflections",
+  "golden hour (1)": "Golden Reflections",
+  "goldenhour 1": "Golden Reflections",
+  "goldenhour (1)": "Golden Reflections",
+  "golden hour 2": "Warm Light",
+  "golden hour (2)": "Warm Light",
+  "goldenhour 2": "Warm Light",
+  "goldenhour (2)": "Warm Light",
+  "golden hour 3": "Sunset Horizon",
+  "golden hour (3)": "Sunset Horizon",
+  "goldenhour 3": "Sunset Horizon",
+  "goldenhour (3)": "Sunset Horizon",
+  "golden hour 4": "Golden Waters",
+  "golden hour (4)": "Golden Waters",
+  "goldenhour 4": "Golden Waters",
+  "goldenhour (4)": "Golden Waters",
+  "golden hour 5": "Evening Glow",
+  "golden hour (5)": "Evening Glow",
+  "goldenhour 5": "Evening Glow",
+  "goldenhour (5)": "Evening Glow",
+
+  // Happy Guests (customer photographs)
+  "photo 1": "Happy Paddlers",
+  "photo (1)": "Happy Paddlers",
+  "photo 2": "Smiling Kayakers",
+  "photo (2)": "Smiling Kayakers",
+  "other 1": "Happy Paddlers",
+  "other (1)": "Happy Paddlers",
+  "other 2": "Smiling Kayakers",
+  "other (2)": "Smiling Kayakers",
+  "other 3": "Kayora Moments",
+  "other (3)": "Kayora Moments",
+  "other 4": "Group Adventure",
+  "other (4)": "Group Adventure",
+  "happy guests 1": "Happy Paddlers",
+  "happy guests (1)": "Happy Paddlers",
+  "happy guests 2": "Smiling Kayakers",
+  "happy guests (2)": "Smiling Kayakers",
+  "happy guests 3": "Kayora Moments",
+  "happy guests (3)": "Kayora Moments",
+  "happy guests 4": "Group Adventure",
+  "happy guests (4)": "Group Adventure",
+  "happy guests group": "Group Adventure",
+  "happy guest 1": "Happy Paddlers",
+  "happy guest 2": "Smiling Kayakers",
 };
 
 /**
@@ -85,19 +130,47 @@ export function getFilename(filepath: string): string {
 }
 
 /**
- * Determine category from filename, ignoring capitalization.
- * - Starts with "sunrise" -> "sunrise"
- * - Starts with "sunset"  -> "sunset"
- * - Starts with "mangrove"-> "mangrove"
- * - Otherwise (including "photo", "other") -> "general"
+ * Determine category from filename, ignoring capitalization, hyphens, and underscores.
+ * Matches category name prefix regardless of sequential or non-sequential numbering.
+ *
+ * - "golden-hour*", "golden hour*", "goldenhour*" -> "golden-hour"
+ * - "happy guests*", "happy guest*", "guest*", "photo*", "other*" -> "happy-guests"
+ * - "sunrise*" -> "sunrise"
+ * - "sunset*"  -> "sunset"
+ * - "mangrove*"-> "mangrove"
+ * - Otherwise  -> "general" (displays under "all" only)
  */
 export function getCategoryFromFilename(
   filename: string
-): "sunrise" | "sunset" | "mangrove" | "general" {
-  const base = getBaseName(filename).toLowerCase();
-  if (base.startsWith("sunrise")) return "sunrise";
-  if (base.startsWith("sunset")) return "sunset";
-  if (base.startsWith("mangrove")) return "mangrove";
+): "sunrise" | "sunset" | "mangrove" | "golden-hour" | "happy-guests" | "general" {
+  const base = getBaseName(filename)
+    .toLowerCase()
+    .replace(/[-_]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (base.startsWith("golden hour") || base.startsWith("goldenhour")) {
+    return "golden-hour";
+  }
+  if (
+    base.startsWith("happy guest") ||
+    base.startsWith("happy guests") ||
+    base.startsWith("guest") ||
+    base.startsWith("photo") ||
+    base.startsWith("other")
+  ) {
+    return "happy-guests";
+  }
+  if (base.startsWith("sunrise")) {
+    return "sunrise";
+  }
+  if (base.startsWith("sunset")) {
+    return "sunset";
+  }
+  if (base.startsWith("mangrove")) {
+    return "mangrove";
+  }
+
   return "general";
 }
 
@@ -106,12 +179,21 @@ export function getCategoryFromFilename(
  */
 export function getCaptionFromFilename(
   filename: string,
-  category: "sunrise" | "sunset" | "mangrove" | "general"
+  category: "sunrise" | "sunset" | "mangrove" | "golden-hour" | "happy-guests" | "general"
 ): string {
-  const baseKey = getBaseName(filename).toLowerCase().replace(/\s+/g, " ");
+  const baseKey = getBaseName(filename)
+    .toLowerCase()
+    .replace(/[-_]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 
   if (captionMap[baseKey]) {
     return captionMap[baseKey];
+  }
+
+  const strippedKey = baseKey.replace(/[()]/g, "").replace(/\s+/g, " ").trim();
+  if (captionMap[strippedKey]) {
+    return captionMap[strippedKey];
   }
 
   // Fallbacks by category (strictly 1-3 words)
@@ -122,6 +204,10 @@ export function getCaptionFromFilename(
       return "Sunset Glow";
     case "mangrove":
       return "Mangrove Trail";
+    case "golden-hour":
+      return "Golden Reflections";
+    case "happy-guests":
+      return "Happy Paddlers";
     case "general":
     default:
       return "Kayora Moments";
@@ -129,10 +215,57 @@ export function getCaptionFromFilename(
 }
 
 /**
+ * Returns clean category label for photo card badge
+ */
+export function getCategoryBadgeLabel(category: string): string {
+  switch (category) {
+    case "sunrise":
+      return "Sunrise";
+    case "sunset":
+      return "Sunset";
+    case "mangrove":
+      return "Mangrove";
+    case "golden-hour":
+      return "Golden Hour";
+    case "happy-guests":
+      return "Happy Guests";
+    default:
+      return "Moments";
+  }
+}
+
+/**
+ * Returns category label for lightbox session title
+ */
+export function getCategoryLightboxLabel(category: string): string {
+  switch (category) {
+    case "sunrise":
+      return "Sunrise Session";
+    case "sunset":
+      return "Sunset Session";
+    case "mangrove":
+      return "Mangrove Session";
+    case "golden-hour":
+      return "Golden Hour Session";
+    case "happy-guests":
+      return "Happy Guests";
+    default:
+      return "Kayora Experience";
+  }
+}
+
+/**
  * Generates natural descriptive alt text
  */
 export function getAltText(caption: string, category: string): string {
-  const categoryLabel = category === "general" ? "Backwater" : category;
+  const categoryLabel =
+    category === "golden-hour"
+      ? "Golden Hour"
+      : category === "happy-guests"
+      ? "Guests"
+      : category === "general"
+      ? "Backwater"
+      : category;
   return `Kayora ${categoryLabel} kayaking tour in Kochi - ${caption}`;
 }
 
@@ -155,19 +288,18 @@ const publicGalleryModules = import.meta.glob<string>(
 );
 
 /**
- * Excluded gallery images (normalized to lowercase, whitespace trimmed).
- * To restore an image in the future (e.g. Mangrove 6), remove it from this set.
+ * Strictly excludes Mangrove 6 / Mangrove (6) from gallery data.
+ * Does not match Mangrove 16, Mangrove 60, Mangrove 61, or other files.
  */
-export const excludedGalleryImages = new Set<string>([
-  "mangrove 6",
-  "mangrove (6)",
-]);
-
 export function isExcludedGalleryImage(filename: string): boolean {
-  const baseKey = getBaseName(filename).toLowerCase().replace(/\s+/g, " ").trim();
-  if (excludedGalleryImages.has(baseKey)) return true;
-  const stripped = baseKey.replace(/[()]/g, "").replace(/\s+/g, " ").trim();
-  return excludedGalleryImages.has(stripped);
+  const base = getBaseName(filename)
+    .toLowerCase()
+    .replace(/[()]/g, " ")
+    .replace(/[-_]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return base === "mangrove 6";
 }
 
 /**
@@ -182,12 +314,16 @@ export function getGalleryPhotos(): GalleryPhoto[] {
     const filename = getFilename(path);
     if (isExcludedGalleryImage(filename)) continue;
 
-    const baseKey = getBaseName(filename).toLowerCase();
+    const baseKey = getBaseName(filename)
+      .toLowerCase()
+      .replace(/[-_]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
     const category = getCategoryFromFilename(filename);
     const caption = getCaptionFromFilename(filename, category);
 
     photoMap.set(baseKey, {
-      id: `gallery-src-${baseKey}`,
+      id: `gallery-src-${baseKey.replace(/[^a-z0-9]/g, "-")}`,
       filename,
       src: url,
       category,
@@ -201,7 +337,11 @@ export function getGalleryPhotos(): GalleryPhoto[] {
     const filename = getFilename(path);
     if (isExcludedGalleryImage(filename)) continue;
 
-    const baseKey = getBaseName(filename).toLowerCase();
+    const baseKey = getBaseName(filename)
+      .toLowerCase()
+      .replace(/[-_]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
 
     if (!photoMap.has(baseKey)) {
       const category = getCategoryFromFilename(filename);
@@ -212,7 +352,7 @@ export function getGalleryPhotos(): GalleryPhoto[] {
         : rawUrl;
 
       photoMap.set(baseKey, {
-        id: `gallery-pub-${baseKey}`,
+        id: `gallery-pub-${baseKey.replace(/[^a-z0-9]/g, "-")}`,
         filename,
         src: cleanUrl,
         category,
@@ -234,9 +374,14 @@ export function getGalleryPhotos(): GalleryPhoto[] {
   return photos;
 }
 
-export const galleryCategories: { key: "all" | "sunrise" | "sunset" | "mangrove"; label: string }[] = [
+/**
+ * The six gallery filters in exact required order.
+ */
+export const galleryCategories: { key: GalleryCategory; label: string }[] = [
   { key: "all", label: "All" },
   { key: "sunrise", label: "Sunrise" },
   { key: "sunset", label: "Sunset" },
   { key: "mangrove", label: "Mangrove" },
+  { key: "golden-hour", label: "Golden Hour" },
+  { key: "happy-guests", label: "Happy Guests" },
 ];

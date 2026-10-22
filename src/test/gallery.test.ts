@@ -5,6 +5,7 @@ import {
   getGalleryPhotos,
   galleryCategories,
   isExcludedGalleryImage,
+  curatedGalleryItems,
 } from "@/lib/gallery";
 
 describe("Gallery Logic & Categorization", () => {
@@ -28,6 +29,51 @@ describe("Gallery Logic & Categorization", () => {
     ]);
   });
 
+  it("restores and preserves all original curated gallery images without data loss", () => {
+    const photos = getGalleryPhotos();
+
+    // Verify all 9 original curated images exist in the active gallery
+    const expectedOriginalFiles = [
+      "sunrise.jpg",
+      "mangrove-channel.jpg",
+      "sunset.jpg",
+      "group-mangrove.jpg",
+      "chinese-nets-dusk.jpg",
+      "night-glow.jpg",
+      "paddle-morning.jpg",
+      "explore.jpg",
+      "sunrise-group.jpg",
+    ];
+
+    for (const filename of expectedOriginalFiles) {
+      const match = photos.find((p) => p.filename.toLowerCase() === filename);
+      expect(match, `Expected ${filename} to be present in gallery`).toBeDefined();
+    }
+
+    // Verify original titles and captions are preserved
+    const sunrise = photos.find((p) => p.filename === "sunrise.jpg");
+    expect(sunrise?.caption).toBe("Golden Sunrise");
+    expect(sunrise?.subtitle).toBe("Early morning calm over Kadamakkudy waters");
+    expect(sunrise?.category).toBe("sunrise");
+
+    const mangrove = photos.find((p) => p.filename === "mangrove-channel.jpg");
+    expect(mangrove?.caption).toBe("Mangrove Tunnels");
+    expect(mangrove?.category).toBe("mangrove");
+
+    const sunset = photos.find((p) => p.filename === "sunset.jpg");
+    expect(sunset?.caption).toBe("Sunset Drift");
+    expect(sunset?.category).toBe("sunset");
+
+    // Group / customer photos are migrated to happy-guests
+    const group = photos.find((p) => p.filename === "group-mangrove.jpg");
+    expect(group?.caption).toBe("Shared Journeys");
+    expect(group?.category).toBe("happy-guests");
+
+    const nightGlow = photos.find((p) => p.filename === "night-glow.jpg");
+    expect(nightGlow?.caption).toBe("Evening Reflections");
+    expect(nightGlow?.category).toBe("golden-hour");
+  });
+
   it("determines categories correctly with non-sequential numbering, hyphens, and underscores", () => {
     // Sunrise
     expect(getCategoryFromFilename("Sunrise 1.jpg")).toBe("sunrise");
@@ -35,6 +81,7 @@ describe("Gallery Logic & Categorization", () => {
     expect(getCategoryFromFilename("SUNRISE (1).JPG")).toBe("sunrise");
     expect(getCategoryFromFilename("Sunrise 12.jpg")).toBe("sunrise");
     expect(getCategoryFromFilename("sunrise11 (1).png")).toBe("sunrise");
+    expect(getCategoryFromFilename("paddle-morning.jpg")).toBe("sunrise");
 
     // Sunset
     expect(getCategoryFromFilename("Sunset 1.jpg")).toBe("sunset");
@@ -42,6 +89,7 @@ describe("Gallery Logic & Categorization", () => {
     expect(getCategoryFromFilename("sunset (3).webp")).toBe("sunset");
     expect(getCategoryFromFilename("Sunset 7.jpg")).toBe("sunset");
     expect(getCategoryFromFilename("sunset11 (1).PNG")).toBe("sunset");
+    expect(getCategoryFromFilename("chinese-nets-dusk.jpg")).toBe("sunset");
 
     // Mangrove
     expect(getCategoryFromFilename("Mangrove 1.jpeg")).toBe("mangrove");
@@ -49,6 +97,8 @@ describe("Gallery Logic & Categorization", () => {
     expect(getCategoryFromFilename("MANGROVE (4).png")).toBe("mangrove");
     expect(getCategoryFromFilename("Mangrove 11.jpg")).toBe("mangrove");
     expect(getCategoryFromFilename("MANGROVE 11.jpg")).toBe("mangrove");
+    expect(getCategoryFromFilename("mangrove-channel.jpg")).toBe("mangrove");
+    expect(getCategoryFromFilename("explore.jpg")).toBe("mangrove");
 
     // Golden Hour
     expect(getCategoryFromFilename("Golden Hour 1.jpg")).toBe("golden-hour");
@@ -57,6 +107,7 @@ describe("Gallery Logic & Categorization", () => {
     expect(getCategoryFromFilename("golden_hour_2.jpg")).toBe("golden-hour");
     expect(getCategoryFromFilename("goldenhour (1).JPG")).toBe("golden-hour");
     expect(getCategoryFromFilename("goldenhour 3.png")).toBe("golden-hour");
+    expect(getCategoryFromFilename("night-glow.jpg")).toBe("golden-hour");
 
     // Happy Guests (customer photos)
     expect(getCategoryFromFilename("Happy Guests 1.jpg")).toBe("happy-guests");
@@ -66,6 +117,8 @@ describe("Gallery Logic & Categorization", () => {
     expect(getCategoryFromFilename("Photo 1.jpg")).toBe("happy-guests");
     expect(getCategoryFromFilename("other (1).JPG")).toBe("happy-guests");
     expect(getCategoryFromFilename("other 3.jpg")).toBe("happy-guests");
+    expect(getCategoryFromFilename("group-mangrove.jpg")).toBe("happy-guests");
+    expect(getCategoryFromFilename("sunrise-group.jpg")).toBe("happy-guests");
 
     // Unmatched/ambiguous files fall back to general
     expect(getCategoryFromFilename("unmatched-name.jpg")).toBe("general");
@@ -118,8 +171,8 @@ describe("Gallery Logic & Categorization", () => {
     const photos = getGalleryPhotos();
     expect(photos.length).toBeGreaterThan(0);
 
-    // Verify natural sort order (e.g. mangrove (1) before mangrove (2))
-    const mangrovePhotos = photos.filter((p) => p.category === "mangrove");
+    // Verify natural sort order among discovered mangrove photos
+    const mangrovePhotos = photos.filter((p) => !p.isCurated && p.category === "mangrove");
     expect(mangrovePhotos.length).toBeGreaterThan(0);
 
     for (let i = 0; i < mangrovePhotos.length - 1; i++) {
@@ -142,13 +195,16 @@ describe("Gallery Logic & Categorization", () => {
     const happyGuests = all.filter((p) => p.category === "happy-guests");
 
     // All must contain every photo
-    expect(all.length).toBeGreaterThanOrEqual(
+    expect(all.length).toBe(
       sunrise.length + sunset.length + mangrove.length + goldenHour.length + happyGuests.length
     );
 
-    // Ensure Golden Hour and Happy Guests photos exist
-    expect(goldenHour.length).toBeGreaterThan(0);
-    expect(happyGuests.length).toBeGreaterThan(0);
+    // Ensure all 5 categories have photos
+    expect(sunrise.length).toBeGreaterThanOrEqual(2);
+    expect(sunset.length).toBeGreaterThanOrEqual(2);
+    expect(mangrove.length).toBeGreaterThanOrEqual(2);
+    expect(goldenHour.length).toBeGreaterThanOrEqual(1);
+    expect(happyGuests.length).toBeGreaterThanOrEqual(2);
 
     // Ensure all photo IDs are unique
     const idSet = new Set(all.map((p) => p.id));

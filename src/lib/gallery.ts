@@ -1,11 +1,15 @@
 /**
- * Gallery Image Discovery & Categorization Module
+ * Gallery Image Discovery, Categorization & Registry Module
  *
- * Automatically discovers images from src/Gallery/ and public/assets/gallery/
- * using Vite's import.meta.glob().
- * Categorizes photos by filename (Sunrise, Sunset, Mangrove, Golden Hour, Happy Guests).
- * Sorts naturally (Sunrise 1, Sunrise 2, Sunrise 10).
- * Provides concise 1-3 word captions.
+ * Combines curated existing images with auto-discovered images from
+ * src/Gallery/ and public/assets/gallery/ using Vite's import.meta.glob().
+ *
+ * Features:
+ * - Preserves all original curated gallery images (Sunrise, Sunset, Mangrove, Customer photos).
+ * - Categorizes photos by category name (Sunrise, Sunset, Mangrove, Golden Hour, Happy Guests).
+ * - Supports non-sequential numbering (Sunrise 12, Mangrove 11).
+ * - Deduplicates by resolved asset key so no image appears twice.
+ * - Strictly excludes Mangrove 6 without dropping Mangrove 16 or 60.
  */
 
 export type GalleryCategory =
@@ -22,14 +26,135 @@ export interface GalleryPhoto {
   src: string;
   category: "sunrise" | "sunset" | "mangrove" | "golden-hour" | "happy-guests" | "general";
   caption: string;
+  subtitle?: string;
+  alt: string;
+  isCurated?: boolean;
+}
+
+export interface CuratedGalleryItem {
+  id: string;
+  src: string;
+  filename: string;
+  title: string;
+  caption: string;
+  subtitle: string;
+  category: "sunrise" | "sunset" | "mangrove" | "golden-hour" | "happy-guests";
   alt: string;
 }
+
+/**
+ * Original curated gallery photographs preserved from initial site design.
+ * These are high-quality authentic shots served from public/assets/.
+ */
+export const curatedGalleryItems: CuratedGalleryItem[] = [
+  {
+    id: "curated-g1-sunrise",
+    src: "/assets/sunrise.jpg",
+    filename: "sunrise.jpg",
+    title: "Golden Sunrise",
+    caption: "Golden Sunrise",
+    subtitle: "Early morning calm over Kadamakkudy waters",
+    category: "sunrise",
+    alt: "Paddler greeting the sunrise in Kochi - Golden Sunrise",
+  },
+  {
+    id: "curated-g2-mangrove-channel",
+    src: "/assets/mangrove-channel.jpg",
+    filename: "mangrove-channel.jpg",
+    title: "Mangrove Tunnels",
+    caption: "Mangrove Tunnels",
+    subtitle: "Sheltered natural passages surrounded by wildlife",
+    category: "mangrove",
+    alt: "Mangrove canal lined with tropical trees - Mangrove Tunnels",
+  },
+  {
+    id: "curated-g3-sunset",
+    src: "/assets/sunset.jpg",
+    filename: "sunset.jpg",
+    title: "Sunset Drift",
+    caption: "Sunset Drift",
+    subtitle: "Peaceful twilight hues ending a magical paddle",
+    category: "sunset",
+    alt: "Sunset over backwater lagoons - Sunset Drift",
+  },
+  {
+    id: "curated-g4-group-mangrove",
+    src: "/assets/group-mangrove.jpg",
+    filename: "group-mangrove.jpg",
+    title: "Shared Journeys",
+    caption: "Shared Journeys",
+    subtitle: "Friends and paddlers exploring together",
+    category: "happy-guests",
+    alt: "Kayakers paddling together through backwaters - Shared Journeys",
+  },
+  {
+    id: "curated-g5-chinese-nets-dusk",
+    src: "/assets/chinese-nets-dusk.jpg",
+    filename: "chinese-nets-dusk.jpg",
+    title: "Heritage Coastline",
+    caption: "Heritage Coastline",
+    subtitle: "Iconic fishing net structures along the waterways",
+    category: "sunset",
+    alt: "Chinese fishing nets silhouetted at dusk in Kochi - Heritage Coastline",
+  },
+  {
+    id: "curated-g6-night-glow",
+    src: "/assets/night-glow.jpg",
+    filename: "night-glow.jpg",
+    title: "Evening Reflections",
+    caption: "Evening Reflections",
+    subtitle: "Quiet water mirrors the soft evening sky",
+    category: "golden-hour",
+    alt: "Night glow on backwater reflections - Evening Reflections",
+  },
+  {
+    id: "curated-g7-paddle-morning",
+    src: "/assets/paddle-morning.jpg",
+    filename: "paddle-morning.jpg",
+    title: "Dawn Stillness",
+    caption: "Dawn Stillness",
+    subtitle: "Glass-like waters before the world wakes",
+    category: "sunrise",
+    alt: "Solo kayak on morning mirror water - Dawn Stillness",
+  },
+  {
+    id: "curated-g8-explore",
+    src: "/assets/explore.jpg",
+    filename: "explore.jpg",
+    title: "Backwater Passage",
+    caption: "Backwater Passage",
+    subtitle: "Deep into Kerala’s pristine aquatic ecosystem",
+    category: "mangrove",
+    alt: "Explorer kayak advancing through green lagoon - Backwater Passage",
+  },
+  {
+    id: "curated-g9-sunrise-group",
+    src: "/assets/sunrise-group.jpg",
+    filename: "sunrise-group.jpg",
+    title: "Morning Paddlers",
+    caption: "Morning Paddlers",
+    subtitle: "Group greeting the dawn on Kochi backwaters",
+    category: "happy-guests",
+    alt: "Group kayaking session at sunrise in Kochi - Morning Paddlers",
+  },
+];
 
 /**
  * Customizable caption mapping (1-3 words)
  * Maps normalized base filename (lowercase, trimmed) to short visitor-facing caption.
  */
 export const captionMap: Record<string, string> = {
+  // Legacy curated assets
+  sunrise: "Golden Sunrise",
+  "mangrove channel": "Mangrove Tunnels",
+  sunset: "Sunset Drift",
+  "group mangrove": "Shared Journeys",
+  "chinese nets dusk": "Heritage Coastline",
+  "night glow": "Evening Reflections",
+  "paddle morning": "Dawn Stillness",
+  explore: "Backwater Passage",
+  "sunrise group": "Morning Paddlers",
+
   // Sunrise
   "sunrise 1": "Golden Sunrise",
   "sunrise (1)": "Golden Sunrise",
@@ -130,15 +255,23 @@ export function getFilename(filepath: string): string {
 }
 
 /**
+ * Normalizes an asset path or filename into a canonical key for deduplication.
+ */
+export function getAssetKey(filepathOrUrl: string): string {
+  const clean = filepathOrUrl.split("?")[0].split("#")[0];
+  const filename = clean.split("/").pop()?.split("\\").pop() ?? clean;
+  return filename
+    .replace(/\.[^/.]+$/, "")
+    .toLowerCase()
+    .replace(/[-_]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
  * Determine category from filename, ignoring capitalization, hyphens, and underscores.
- * Matches category name prefix regardless of sequential or non-sequential numbering.
- *
- * - "golden-hour*", "golden hour*", "goldenhour*" -> "golden-hour"
- * - "happy guests*", "happy guest*", "guest*", "photo*", "other*" -> "happy-guests"
- * - "sunrise*" -> "sunrise"
- * - "sunset*"  -> "sunset"
- * - "mangrove*"-> "mangrove"
- * - Otherwise  -> "general" (displays under "all" only)
+ * Supports non-sequential numbering (e.g. Sunrise 12, Mangrove 11).
+ * Backward-compatible with older curated assets.
  */
 export function getCategoryFromFilename(
   filename: string
@@ -148,6 +281,13 @@ export function getCategoryFromFilename(
     .replace(/[-_]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+
+  // Backward-compatible older asset matching
+  if (base === "paddle morning") return "sunrise";
+  if (base === "chinese nets dusk") return "sunset";
+  if (base === "night glow") return "golden-hour";
+  if (base === "group mangrove" || base === "sunrise group") return "happy-guests";
+  if (base === "mangrove channel" || base === "explore") return "mangrove";
 
   if (base.startsWith("golden hour") || base.startsWith("goldenhour")) {
     return "golden-hour";
@@ -303,56 +443,67 @@ export function isExcludedGalleryImage(filename: string): boolean {
 }
 
 /**
- * Build the complete, naturally sorted gallery photo collection.
+ * Unified Gallery Registry
+ *
+ * Merges curated legacy gallery images with auto-discovered assets.
+ * Deduplicates by resolved asset key so no image appears twice.
  */
 export function getGalleryPhotos(): GalleryPhoto[] {
-  // Map of normalized base name -> GalleryPhoto to prevent duplicates
-  const photoMap = new Map<string, GalleryPhoto>();
+  const registry = new Map<string, GalleryPhoto>();
 
-  // Process src/Gallery modules first (highest priority)
+  // 1. Register original curated gallery images first
+  for (const item of curatedGalleryItems) {
+    if (isExcludedGalleryImage(item.filename)) continue;
+
+    const key = getAssetKey(item.filename);
+    registry.set(key, {
+      id: item.id,
+      filename: item.filename,
+      src: item.src,
+      category: item.category,
+      caption: item.caption,
+      subtitle: item.subtitle,
+      alt: item.alt,
+      isCurated: true,
+    });
+  }
+
+  // 2. Discover images from src/Gallery/
   for (const [path, url] of Object.entries(srcGalleryModules)) {
     const filename = getFilename(path);
     if (isExcludedGalleryImage(filename)) continue;
 
-    const baseKey = getBaseName(filename)
-      .toLowerCase()
-      .replace(/[-_]/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-    const category = getCategoryFromFilename(filename);
-    const caption = getCaptionFromFilename(filename, category);
+    const key = getAssetKey(filename);
+    if (!registry.has(key)) {
+      const category = getCategoryFromFilename(filename);
+      const caption = getCaptionFromFilename(filename, category);
 
-    photoMap.set(baseKey, {
-      id: `gallery-src-${baseKey.replace(/[^a-z0-9]/g, "-")}`,
-      filename,
-      src: url,
-      category,
-      caption,
-      alt: getAltText(caption, category),
-    });
+      registry.set(key, {
+        id: `gallery-src-${key.replace(/[^a-z0-9]/g, "-")}`,
+        filename,
+        src: url,
+        category,
+        caption,
+        alt: getAltText(caption, category),
+      });
+    }
   }
 
-  // Process public/assets/gallery modules if not already added
+  // 3. Discover images from public/assets/gallery/
   for (const [path, rawUrl] of Object.entries(publicGalleryModules)) {
     const filename = getFilename(path);
     if (isExcludedGalleryImage(filename)) continue;
 
-    const baseKey = getBaseName(filename)
-      .toLowerCase()
-      .replace(/[-_]/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-
-    if (!photoMap.has(baseKey)) {
+    const key = getAssetKey(filename);
+    if (!registry.has(key)) {
       const category = getCategoryFromFilename(filename);
       const caption = getCaptionFromFilename(filename, category);
-      // Clean public path so it works in both dev and production
       const cleanUrl = rawUrl.startsWith("/public/assets/")
         ? rawUrl.replace(/^\/public/, "")
         : rawUrl;
 
-      photoMap.set(baseKey, {
-        id: `gallery-pub-${baseKey.replace(/[^a-z0-9]/g, "-")}`,
+      registry.set(key, {
+        id: `gallery-pub-${key.replace(/[^a-z0-9]/g, "-")}`,
         filename,
         src: cleanUrl,
         category,
@@ -362,16 +513,19 @@ export function getGalleryPhotos(): GalleryPhoto[] {
     }
   }
 
-  // Natural numeric sort by filename
-  const photos = Array.from(photoMap.values());
-  photos.sort((a, b) =>
+  // Return list with curated photos preserved first, followed by naturally sorted discovered photos
+  const allPhotos = Array.from(registry.values());
+  const curated = allPhotos.filter((p) => p.isCurated);
+  const discovered = allPhotos.filter((p) => !p.isCurated);
+
+  discovered.sort((a, b) =>
     a.filename.localeCompare(b.filename, undefined, {
       numeric: true,
       sensitivity: "base",
     })
   );
 
-  return photos;
+  return [...curated, ...discovered];
 }
 
 /**

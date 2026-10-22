@@ -320,7 +320,7 @@ export function GallerySection() {
                 {currentPhoto.caption}
               </h3>
               <p className="mt-0.5 text-xs text-mint/90 capitalize">
-                {getCategoryLightboxLabel(currentPhoto.category)}
+                {currentPhoto.subtitle || getCategoryLightboxLabel(currentPhoto.category)}
               </p>
             </div>
           </div>

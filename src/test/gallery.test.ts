@@ -6,6 +6,7 @@ import {
   galleryCategories,
   categoryDescriptions,
   isExcludedGalleryImage,
+  isBirdFilename,
 } from "@/lib/gallery";
 
 describe("Gallery Logic & Categorization", () => {
@@ -81,6 +82,18 @@ describe("Gallery Logic & Categorization", () => {
   });
 
   it("determines categories correctly including birds / Winged Visitors", () => {
+    // isBirdFilename detection
+    expect(isBirdFilename("birds1.jpg")).toBe(true);
+    expect(isBirdFilename("birds2.jpeg")).toBe(true);
+    expect(isBirdFilename("birds10.webp")).toBe(true);
+    expect(isBirdFilename("birds_12.png")).toBe(true);
+    expect(isBirdFilename("birds-3.avif")).toBe(true);
+    expect(isBirdFilename("birds (1).JPG")).toBe(true);
+    expect(isBirdFilename("birds11 (1).PNG")).toBe(true);
+    expect(isBirdFilename("birds11 (5).PNG")).toBe(true);
+    expect(isBirdFilename("Sunrise 1.jpg")).toBe(false);
+    expect(isBirdFilename("Mangrove 3.jpg")).toBe(false);
+
     // Winged Visitors (birds)
     expect(getCategoryFromFilename("birds1.jpg")).toBe("winged-visitors");
     expect(getCategoryFromFilename("birds2.jpg")).toBe("winged-visitors");
@@ -91,6 +104,8 @@ describe("Gallery Logic & Categorization", () => {
     expect(getCategoryFromFilename("birds-5.webp")).toBe("winged-visitors");
     expect(getCategoryFromFilename("bird 12.avif")).toBe("winged-visitors");
     expect(getCategoryFromFilename("BIRDS (3).JPG")).toBe("winged-visitors");
+    expect(getCategoryFromFilename("birds11 (1).PNG")).toBe("winged-visitors");
+    expect(getCategoryFromFilename("birds11 (5).PNG")).toBe("winged-visitors");
     expect(getCategoryFromFilename("Winged Visitors 1.jpg")).toBe("winged-visitors");
 
     // Sunrise
@@ -219,6 +234,7 @@ describe("Gallery Logic & Categorization", () => {
     expect(sunset.length).toBeGreaterThanOrEqual(2);
     expect(mangrove.length).toBeGreaterThanOrEqual(2);
     expect(wingedVisitors.length).toBeGreaterThanOrEqual(4);
+    expect(wingedVisitors.length).toBe(9);
     expect(goldenHour.length).toBeGreaterThanOrEqual(1);
     expect(happyGuests.length).toBeGreaterThanOrEqual(2);
 

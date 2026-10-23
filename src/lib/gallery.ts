@@ -220,12 +220,40 @@ export const captionMap: Record<string, string> = {
   "birds 4": "River Tern",
   "birds (4)": "River Tern",
   birds4: "River Tern",
-  "birds 5": "Quiet Perch",
-  "birds (5)": "Quiet Perch",
-  birds5: "Quiet Perch",
+  "birds 5": "Brahminy Kite",
+  "birds (5)": "Brahminy Kite",
+  birds5: "Brahminy Kite",
   "birds 6": "Soaring Cormorant",
   "birds (6)": "Soaring Cormorant",
   birds6: "Soaring Cormorant",
+  "birds 7": "Little Cormorant",
+  "birds (7)": "Little Cormorant",
+  birds7: "Little Cormorant",
+  "birds 8": "Pond Heron",
+  "birds (8)": "Pond Heron",
+  birds8: "Pond Heron",
+  "birds 9": "White-throated Kingfisher",
+  "birds (9)": "White-throated Kingfisher",
+  birds9: "White-throated Kingfisher",
+  "birds 10": "Darter",
+  "birds (10)": "Darter",
+  birds10: "Darter",
+  "birds 11": "Coastal Egret",
+  "birds (11)": "Coastal Egret",
+  birds11: "Coastal Egret",
+  "birds 12": "Backwater Heron",
+  "birds (12)": "Backwater Heron",
+  birds12: "Backwater Heron",
+  "birds11 (1)": "Coastal Egret",
+  "birds11 1": "Coastal Egret",
+  "birds11 (2)": "Mangrove Kingfisher",
+  "birds11 2": "Mangrove Kingfisher",
+  "birds11 (3)": "Backwater Heron",
+  "birds11 3": "Backwater Heron",
+  "birds11 (4)": "River Tern",
+  "birds11 4": "River Tern",
+  "birds11 (5)": "Brahminy Kite",
+  "birds11 5": "Brahminy Kite",
   "winged visitors 1": "Coastal Egret",
   "winged visitors 2": "Mangrove Kingfisher",
   "winged visitors 3": "Backwater Heron",
@@ -311,6 +339,21 @@ export function getAssetKey(filepathOrUrl: string): string {
 }
 
 /**
+ * Detects whether a filename represents a bird / Winged Visitors photograph.
+ * Matches filenames starting with "birds" or "winged visitors" followed by a serial number
+ * case-insensitively, supporting spaces, underscores, and hyphens (e.g. birds1, birds_12, birds (3)).
+ */
+export function isBirdFilename(filename: string): boolean {
+  const base = getBaseName(filename);
+  return (
+    /^(birds?|winged[\s_-]*visitors?)[\s_-]*\(?\d+/i.test(base) ||
+    /^birds?$/i.test(base) ||
+    base.toLowerCase().startsWith("bird") ||
+    base.toLowerCase().startsWith("winged visitor")
+  );
+}
+
+/**
  * Determine category from filename, ignoring capitalization, hyphens, and underscores.
  * Supports non-sequential numbering (e.g. Sunrise 12, Mangrove 11, birds 1).
  * Backward-compatible with older curated assets.
@@ -340,6 +383,7 @@ export function getCategoryFromFilename(
 
   // Winged Visitors (birds)
   if (
+    isBirdFilename(filename) ||
     base.startsWith("bird") ||
     base.startsWith("birds") ||
     base.startsWith("winged visitor") ||

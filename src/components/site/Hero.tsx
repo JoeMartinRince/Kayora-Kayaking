@@ -284,23 +284,17 @@ export function Hero() {
 
           {/* Compact 2-3 line hero description optimized for local SEO */}
           <p className="mt-2.5 max-w-xl text-sm leading-relaxed text-on-dark/85 sm:mt-4 sm:text-base lg:text-lg">
-            Escape into Kochi&apos;s serene backwaters with Kayora Kayaking in Kadamakkudy. Paddle through lush mangroves, peaceful sunrise calm, and tranquil sunset waterways.
+            Escape into Kochi&apos;s serene backwaters with Kayora Kayaking in Kadamakkudy. Paddle
+            through lush mangroves, peaceful sunrise calm, and tranquil sunset waterways.
           </p>
 
           {/* Refined CTA buttons sharing identical glassmorphism styling */}
           <div className="mt-4 flex flex-wrap items-center gap-2.5 sm:mt-6 sm:gap-3">
-            <a
-              href="#experiences"
-              className={`group ${heroCtaClass}`}
-            >
+            <a href="#experiences" className={`group ${heroCtaClass}`}>
               <span>Explore Kayaking</span>
               <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-1" />
             </a>
-            <a
-              href={whatsappLink()}
-              {...ext}
-              className={heroCtaClass}
-            >
+            <a href={whatsappLink()} {...ext} className={heroCtaClass}>
               Book Your Adventure
             </a>
           </div>

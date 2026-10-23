@@ -10,7 +10,10 @@ export function ExperiencesSection() {
   const regularExperiences = experiences.filter((exp) => !exp.featured);
 
   return (
-    <section id="experiences" className="relative scroll-mt-20 pt-4 pb-20 sm:pt-8 lg:pt-10 lg:pb-28">
+    <section
+      id="experiences"
+      className="relative scroll-mt-20 pt-4 pb-20 sm:pt-8 lg:pt-10 lg:pb-28"
+    >
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         {/* Section Header */}
         <div className="mx-auto max-w-2xl text-center">

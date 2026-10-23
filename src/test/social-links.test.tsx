@@ -9,8 +9,7 @@ import { ReviewsSection } from "@/components/site/ReviewsSection";
 import { business } from "@/config/business";
 
 describe("Instagram Links Verification", () => {
-  const expectedUrl =
-    "https://www.instagram.com/kayora_kayaking_kochi?srtk=MTN5MDIzOWZ1NGx4cQ==";
+  const expectedUrl = "https://www.instagram.com/kayora_kayaking_kochi?srtk=MTN5MDIzOWZ1NGx4cQ==";
 
   it("has the verified official URL in centralized business config", () => {
     expect(business.instagramUrl).toBe(expectedUrl);

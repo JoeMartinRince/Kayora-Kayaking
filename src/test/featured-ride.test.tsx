@@ -12,14 +12,10 @@ describe("FeaturedRideSection Component", () => {
     expect(screen.getByText("FEATURED MANGROVE RIDE")).toBeInTheDocument();
 
     // Check heading & tagline & description
+    expect(screen.getByRole("heading", { name: /mangrove forest ride/i })).toBeInTheDocument();
+    expect(screen.getByText(/into the green\. away from the ordinary\./i)).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: /mangrove forest ride/i })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(/into the green\. away from the ordinary\./i)
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(/discover kochi's waterways surrounded by lush mangrove scenery\./i)
+      screen.getByText(/discover kochi's waterways surrounded by lush mangrove scenery\./i),
     ).toBeInTheDocument();
 
     // Check main photograph and meaningful alt text

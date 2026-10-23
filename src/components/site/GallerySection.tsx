@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { Camera, X, ZoomIn, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   getGalleryPhotos,
@@ -33,8 +33,8 @@ export function GallerySection() {
       "happy-guests": 0,
     };
     for (const p of allPhotos) {
-      if (p.category in counts && p.category !== "all") {
-        counts[p.category as Exclude<GalleryCategory, "all">]++;
+      if (p.category !== "general" && p.category in counts) {
+        counts[p.category]++;
       }
     }
     return counts;
@@ -60,36 +60,40 @@ export function GallerySection() {
   };
 
   // Close lightbox
-  const closeLightbox = () => {
+  const closeLightbox = useCallback(() => {
     setActiveLightboxIndex(null);
     if (triggerRef.current) {
       triggerRef.current.focus();
     }
-  };
+  }, []);
 
   // Navigate lightbox
-  const showPrev = () => {
-    if (activeLightboxIndex === null || filteredPhotos.length === 0) return;
-    setActiveLightboxIndex((prev) =>
-      prev === null ? null : (prev - 1 + filteredPhotos.length) % filteredPhotos.length
-    );
-  };
+  const showPrev = useCallback(() => {
+    setActiveLightboxIndex((prev) => {
+      if (prev === null || filteredPhotos.length === 0) return null;
+      return (prev - 1 + filteredPhotos.length) % filteredPhotos.length;
+    });
+  }, [filteredPhotos.length]);
 
-  const showNext = () => {
-    if (activeLightboxIndex === null || filteredPhotos.length === 0) return;
-    setActiveLightboxIndex((prev) =>
-      prev === null ? null : (prev + 1) % filteredPhotos.length
-    );
-  };
+  const showNext = useCallback(() => {
+    setActiveLightboxIndex((prev) => {
+      if (prev === null || filteredPhotos.length === 0) return null;
+      return (prev + 1) % filteredPhotos.length;
+    });
+  }, [filteredPhotos.length]);
 
   // Touch swipe support for mobile
   const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartRef.current = e.targetTouches[0].clientX;
+    if (e.targetTouches[0]) {
+      touchStartRef.current = e.targetTouches[0].clientX;
+    }
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (touchStartRef.current === null) return;
-    const touchEnd = e.changedTouches[0].clientX;
+    const touch = e.changedTouches[0];
+    if (!touch) return;
+    const touchEnd = touch.clientX;
     const diff = touchStartRef.current - touchEnd;
     if (diff > 50) {
       showNext();
@@ -101,13 +105,12 @@ export function GallerySection() {
 
   // Prevent background scrolling when lightbox is open
   useEffect(() => {
-    if (isOpen) {
-      const prevOverflow = document.body.style.overflow;
-      document.body.style.overflow = "hidden";
-      return () => {
-        document.body.style.overflow = prevOverflow;
-      };
-    }
+    if (!isOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
   }, [isOpen]);
 
   // Keyboard navigation (Escape, ArrowLeft, ArrowRight)
@@ -126,7 +129,7 @@ export function GallerySection() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, activeLightboxIndex, filteredPhotos.length]);
+  }, [isOpen, closeLightbox, showPrev, showNext]);
 
   return (
     <section id="gallery" className="relative scroll-mt-20 py-20 lg:py-28">

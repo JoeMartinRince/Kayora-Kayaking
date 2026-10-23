@@ -20,7 +20,9 @@ describe("Email Enquiry Integration across Website", () => {
     expect(heroEmailButton).toBeInTheDocument();
     expect(heroEmailButton).toHaveAttribute("href", emailLink());
     expect(heroEmailButton.getAttribute("href")).toContain("mailto:kayorakayaking@gmail.com");
-    expect(heroEmailButton.getAttribute("href")).toContain("subject=Kayaking%20Enquiry%20%E2%80%93%20Kayora%20Kochi");
+    expect(heroEmailButton.getAttribute("href")).toContain(
+      "subject=Kayaking%20Enquiry%20%E2%80%93%20Kayora%20Kochi",
+    );
   });
 
   it("renders Email Enquiry option in FeaturedRideSection with prefilled subject", () => {

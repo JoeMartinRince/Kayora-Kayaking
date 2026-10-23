@@ -47,8 +47,8 @@ describe("GallerySection UI Component", () => {
     // Verify category description updates
     expect(
       screen.getByText(
-        /Paddle through the mangroves and discover the fascinating birds that visit these tranquil backwaters\./i
-      )
+        /Paddle through the mangroves and discover the fascinating birds that visit these tranquil backwaters\./i,
+      ),
     ).toBeInTheDocument();
 
     // Click Golden Hour
@@ -73,7 +73,10 @@ describe("GallerySection UI Component", () => {
   it("opens lightbox on image click, shows position, captions, and closes on Escape", () => {
     render(<GallerySection />);
 
-    const firstPhoto = screen.getAllByRole("button", { name: /^view photo:/i })[0];
+    const photoButtons = screen.getAllByRole("button", { name: /^view photo:/i });
+    expect(photoButtons.length).toBeGreaterThan(0);
+    const firstPhoto = photoButtons[0];
+    if (!firstPhoto) throw new Error("No photo buttons found");
     fireEvent.click(firstPhoto);
 
     // Lightbox should be open with dialog role

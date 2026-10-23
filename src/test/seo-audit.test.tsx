@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import * as fs from "fs";
 import * as path from "path";
-import { Route, structuredData } from "@/routes/__root";
+import { Route } from "@/routes/__root";
+import { structuredData, SchemaBusiness, SchemaWebSite } from "@/config/seo";
 import { business } from "@/config/business";
 
 describe("SEO & Production Audit", () => {
@@ -10,12 +11,12 @@ describe("SEO & Production Audit", () => {
     const graph = structuredData["@graph"];
     expect(Array.isArray(graph)).toBe(true);
 
-    const businessSchema = graph.find((item: any) =>
-      Array.isArray(item["@type"])
-        ? item["@type"].includes("LocalBusiness")
-        : item["@type"] === "LocalBusiness"
+    const businessSchema = graph.find((item): item is SchemaBusiness =>
+      Array.isArray(item["@type"]),
     );
     expect(businessSchema).toBeDefined();
+    if (!businessSchema) throw new Error("LocalBusiness schema not found");
+
     expect(businessSchema.name).toBe("Kayora Kayaking");
     expect(businessSchema.telephone).toBe("+917736629393");
     expect(businessSchema.email).toBe("kayorakayaking@gmail.com");
@@ -27,45 +28,54 @@ describe("SEO & Production Audit", () => {
     expect(businessSchema.sameAs).toContain(business.instagramUrl);
     expect(businessSchema.sameAs).toContain(business.launchPointMapUrl);
 
-    const websiteSchema = graph.find((item: any) => item["@type"] === "WebSite");
+    const websiteSchema = graph.find((item): item is SchemaWebSite => item["@type"] === "WebSite");
     expect(websiteSchema).toBeDefined();
+    if (!websiteSchema) throw new Error("WebSite schema not found");
+
     expect(websiteSchema.url).toBe("https://www.kayorakayakingkochi.com/");
     expect(websiteSchema.inLanguage).toBe("en");
   });
 
   it("configures head meta tags with canonical URL, OpenGraph, and Twitter cards", () => {
-    const headConfig = Route.options.head?.({} as any);
+    type HeadResult = {
+      meta?: Array<{ title?: string; name?: string; content?: string; property?: string }>;
+      links?: Array<{ rel?: string; href?: string; type?: string }>;
+    };
+
+    const headFn = Route.options.head as unknown as (() => HeadResult) | undefined;
+    expect(headFn).toBeDefined();
+    const headConfig = headFn?.();
     expect(headConfig).toBeDefined();
 
     const meta = headConfig?.meta || [];
     const links = headConfig?.links || [];
 
     // Title & description
-    const title = meta.find((m: any) => m.title);
+    const title = meta.find((m) => m.title);
     expect(title?.title).toContain("Kayora Kayaking Kochi");
     expect(title?.title).toContain("Kadamakkudy");
 
-    const desc = meta.find((m: any) => m.name === "description");
+    const desc = meta.find((m) => m.name === "description");
     expect(desc?.content).toContain("Kadamakkudy");
     expect(desc?.content).toContain("Kochi");
 
     // Canonical link
-    const canonical = links.find((l: any) => l.rel === "canonical");
+    const canonical = links.find((l) => l.rel === "canonical");
     expect(canonical?.href).toBe("https://www.kayorakayakingkochi.com/");
 
     // Robots directive
-    const robots = meta.find((m: any) => m.name === "robots");
+    const robots = meta.find((m) => m.name === "robots");
     expect(robots?.content).toContain("index, follow");
 
     // OpenGraph tags
-    const ogUrl = meta.find((m: any) => m.property === "og:url");
+    const ogUrl = meta.find((m) => m.property === "og:url");
     expect(ogUrl?.content).toBe("https://www.kayorakayakingkochi.com/");
 
-    const ogImage = meta.find((m: any) => m.property === "og:image");
+    const ogImage = meta.find((m) => m.property === "og:image");
     expect(ogImage?.content).toMatch(/^https:\/\/www\.kayorakayakingkochi\.com\//);
 
     // Twitter card
-    const twitterCard = meta.find((m: any) => m.name === "twitter:card");
+    const twitterCard = meta.find((m) => m.name === "twitter:card");
     expect(twitterCard?.content).toBe("summary_large_image");
   });
 
@@ -91,7 +101,10 @@ describe("SEO & Production Audit", () => {
   it("has valid site.webmanifest and _headers configuration", () => {
     const manifestPath = path.resolve(process.cwd(), "public/site.webmanifest");
     expect(fs.existsSync(manifestPath)).toBe(true);
-    const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8")) as {
+      name: string;
+      icons: unknown[];
+    };
     expect(manifest.name).toBe("Kayora Kayaking Kochi");
     expect(manifest.icons.length).toBeGreaterThan(0);
 

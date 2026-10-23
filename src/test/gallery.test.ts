@@ -31,7 +31,7 @@ describe("Gallery Logic & Categorization", () => {
     ]);
 
     expect(categoryDescriptions["winged-visitors"]).toBe(
-      "Paddle through the mangroves and discover the fascinating birds that visit these tranquil backwaters."
+      "Paddle through the mangroves and discover the fascinating birds that visit these tranquil backwaters.",
     );
   });
 
@@ -185,8 +185,8 @@ describe("Gallery Logic & Categorization", () => {
     expect(mangrovePhotos.length).toBeGreaterThan(0);
 
     for (let i = 0; i < mangrovePhotos.length - 1; i++) {
-      const current = mangrovePhotos[i].filename;
-      const next = mangrovePhotos[i + 1].filename;
+      const current = mangrovePhotos[i]?.filename ?? "";
+      const next = mangrovePhotos[i + 1]?.filename ?? "";
       const comp = current.localeCompare(next, undefined, {
         numeric: true,
         sensitivity: "base",
@@ -211,7 +211,7 @@ describe("Gallery Logic & Categorization", () => {
         mangrove.length +
         wingedVisitors.length +
         goldenHour.length +
-        happyGuests.length
+        happyGuests.length,
     );
 
     // Ensure all 6 specific categories have photos
@@ -246,10 +246,20 @@ describe("Gallery Logic & Categorization", () => {
       .filter((p) => p.category === "mangrove")
       .map((p) => p.filename.toLowerCase());
 
-    expect(mangroveNames.some((n) => n.includes("mangrove (1)") || n.includes("mangrove 1"))).toBe(true);
-    expect(mangroveNames.some((n) => n.includes("mangrove (2)") || n.includes("mangrove 2"))).toBe(true);
-    expect(mangroveNames.some((n) => n.includes("mangrove (3)") || n.includes("mangrove 3"))).toBe(true);
-    expect(mangroveNames.some((n) => n.includes("mangrove (4)") || n.includes("mangrove 4"))).toBe(true);
-    expect(mangroveNames.some((n) => n.includes("mangrove (5)") || n.includes("mangrove 5"))).toBe(true);
+    expect(mangroveNames.some((n) => n.includes("mangrove (1)") || n.includes("mangrove 1"))).toBe(
+      true,
+    );
+    expect(mangroveNames.some((n) => n.includes("mangrove (2)") || n.includes("mangrove 2"))).toBe(
+      true,
+    );
+    expect(mangroveNames.some((n) => n.includes("mangrove (3)") || n.includes("mangrove 3"))).toBe(
+      true,
+    );
+    expect(mangroveNames.some((n) => n.includes("mangrove (4)") || n.includes("mangrove 4"))).toBe(
+      true,
+    );
+    expect(mangroveNames.some((n) => n.includes("mangrove (5)") || n.includes("mangrove 5"))).toBe(
+      true,
+    );
   });
 });

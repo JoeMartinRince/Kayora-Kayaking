@@ -13,19 +13,20 @@
  */
 
 export type GalleryCategory =
-  | "all"
-  | "sunrise"
-  | "sunset"
-  | "mangrove"
-  | "winged-visitors"
-  | "golden-hour"
-  | "happy-guests";
+  "all" | "sunrise" | "sunset" | "mangrove" | "winged-visitors" | "golden-hour" | "happy-guests";
 
 export interface GalleryPhoto {
   id: string;
   filename: string;
   src: string;
-  category: "sunrise" | "sunset" | "mangrove" | "winged-visitors" | "golden-hour" | "happy-guests" | "general";
+  category:
+    | "sunrise"
+    | "sunset"
+    | "mangrove"
+    | "winged-visitors"
+    | "golden-hour"
+    | "happy-guests"
+    | "general";
   caption: string;
   subtitle?: string;
   alt: string;
@@ -297,8 +298,10 @@ export function getFilename(filepath: string): string {
  * Normalizes an asset path or filename into a canonical key for deduplication.
  */
 export function getAssetKey(filepathOrUrl: string): string {
-  const clean = filepathOrUrl.split("?")[0].split("#")[0];
-  const filename = clean.split("/").pop()?.split("\\").pop() ?? clean;
+  const withoutQuery = filepathOrUrl.split("?")[0] ?? filepathOrUrl;
+  const clean = withoutQuery.split("#")[0] ?? filepathOrUrl;
+  const segments = clean.split(/[/\\]/);
+  const filename = segments[segments.length - 1] ?? clean;
   return filename
     .replace(/\.[^/.]+$/, "")
     .toLowerCase()
@@ -313,8 +316,15 @@ export function getAssetKey(filepathOrUrl: string): string {
  * Backward-compatible with older curated assets.
  */
 export function getCategoryFromFilename(
-  filename: string
-): "sunrise" | "sunset" | "mangrove" | "winged-visitors" | "golden-hour" | "happy-guests" | "general" {
+  filename: string,
+):
+  | "sunrise"
+  | "sunset"
+  | "mangrove"
+  | "winged-visitors"
+  | "golden-hour"
+  | "happy-guests"
+  | "general" {
   const base = getBaseName(filename)
     .toLowerCase()
     .replace(/[-_]/g, " ")
@@ -372,7 +382,14 @@ export function getCategoryFromFilename(
  */
 export function getCaptionFromFilename(
   filename: string,
-  category: "sunrise" | "sunset" | "mangrove" | "winged-visitors" | "golden-hour" | "happy-guests" | "general"
+  category:
+    | "sunrise"
+    | "sunset"
+    | "mangrove"
+    | "winged-visitors"
+    | "golden-hour"
+    | "happy-guests"
+    | "general",
 ): string {
   const baseKey = getBaseName(filename)
     .toLowerCase()
@@ -461,22 +478,19 @@ export function getAltText(caption: string, category: string): string {
     category === "winged-visitors"
       ? "Winged Visitors"
       : category === "golden-hour"
-      ? "Golden Hour"
-      : category === "happy-guests"
-      ? "Guests"
-      : category === "general"
-      ? "Backwater"
-      : category;
+        ? "Golden Hour"
+        : category === "happy-guests"
+          ? "Guests"
+          : category === "general"
+            ? "Backwater"
+            : category;
   return `Kayora ${categoryLabel} kayaking tour in Kochi - ${caption}`;
 }
 
 // Vite discovery for src/Gallery/
 const srcGalleryModules = import.meta.glob<string>(
-  [
-    "/src/Gallery/*.{jpg,jpeg,png,webp,avif}",
-    "/src/Gallery/*.{JPG,JPEG,PNG,WEBP,AVIF}",
-  ],
-  { eager: true, query: "?url", import: "default" }
+  ["/src/Gallery/*.{jpg,jpeg,png,webp,avif}", "/src/Gallery/*.{JPG,JPEG,PNG,WEBP,AVIF}"],
+  { eager: true, query: "?url", import: "default" },
 );
 
 // Fallback discovery for public/assets/gallery/
@@ -485,7 +499,7 @@ const publicGalleryModules = import.meta.glob<string>(
     "/public/assets/gallery/*.{jpg,jpeg,png,webp,avif}",
     "/public/assets/gallery/*.{JPG,JPEG,PNG,WEBP,AVIF}",
   ],
-  { eager: true, query: "?url", import: "default" }
+  { eager: true, query: "?url", import: "default" },
 );
 
 /**
@@ -583,7 +597,7 @@ export function getGalleryPhotos(): GalleryPhoto[] {
     a.filename.localeCompare(b.filename, undefined, {
       numeric: true,
       sensitivity: "base",
-    })
+    }),
   );
 
   return [...curated, ...discovered];

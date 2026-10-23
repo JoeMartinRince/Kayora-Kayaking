@@ -17,12 +17,10 @@ describe("Business Configuration & Helpers", () => {
     expect(business.email).toBe("kayorakayaking@gmail.com");
     expect(telLink).toBe("tel:+917736629393");
     expect(business.instagramUrl).toBe(
-      "https://www.instagram.com/kayora_kayaking_kochi?srtk=MTN5MDIzOWZ1NGx4cQ=="
+      "https://www.instagram.com/kayora_kayaking_kochi?srtk=MTN5MDIzOWZ1NGx4cQ==",
     );
     expect(business.launchPointMapUrl).toContain("maps.app.goo.gl");
-    expect(business.headerLocationMapUrl).toBe(
-      "https://maps.app.goo.gl/kC74aMDuAMgspUwS8?g_st=ic"
-    );
+    expect(business.headerLocationMapUrl).toBe("https://maps.app.goo.gl/kC74aMDuAMgspUwS8?g_st=ic");
   });
 
   it("generates correctly formatted wa.me URLs with encoded messages", () => {
@@ -39,14 +37,16 @@ describe("Business Configuration & Helpers", () => {
     expect(mangroveUrl).toContain("https://wa.me/917736629393?text=");
     expect(mangroveUrl).toContain(encodeURIComponent(mangroveRideMessage));
     expect(mangroveRideMessage).toBe(
-      "Hi Kayora Kayaking! I'm interested in the Mangrove Forest Ride. Could you share the price, duration, launch location, and available slots?"
+      "Hi Kayora Kayaking! I'm interested in the Mangrove Forest Ride. Could you share the price, duration, launch location, and available slots?",
     );
   });
 
   it("generates properly formatted mailto URLs with encoded subject and body", () => {
     const defaultMailto = emailLink();
     expect(defaultMailto).toContain("mailto:kayorakayaking@gmail.com");
-    expect(defaultMailto).toContain("subject=" + encodeURIComponent("Kayaking Enquiry – Kayora Kochi"));
+    expect(defaultMailto).toContain(
+      "subject=" + encodeURIComponent("Kayaking Enquiry – Kayora Kochi"),
+    );
     expect(defaultMailto).toContain("body=");
 
     const customMailto = emailLink({
@@ -54,12 +54,14 @@ describe("Business Configuration & Helpers", () => {
       body: "Custom Body Message",
     });
     expect(customMailto).toBe(
-      `mailto:kayorakayaking@gmail.com?subject=Custom%20Subject&body=Custom%20Body%20Message`
+      `mailto:kayorakayaking@gmail.com?subject=Custom%20Subject&body=Custom%20Body%20Message`,
     );
 
     const expMailto = experienceEmailLink("Sunrise Session");
     expect(expMailto).toContain("mailto:kayorakayaking@gmail.com");
-    expect(expMailto).toContain("subject=" + encodeURIComponent("Sunrise Session Enquiry – Kayora Kochi"));
+    expect(expMailto).toContain(
+      "subject=" + encodeURIComponent("Sunrise Session Enquiry – Kayora Kochi"),
+    );
     expect(expMailto).toContain(encodeURIComponent("Sunrise Session"));
   });
 

@@ -128,8 +128,8 @@ export function LocationSection() {
             </div>
 
             <div className="mt-6 text-xs text-on-dark/60">
-              Launch point coordinates and parking details are also shared via WhatsApp or email upon
-              enquiry.
+              Launch point coordinates and parking details are also shared via WhatsApp or email
+              upon enquiry.
             </div>
           </div>
         </div>

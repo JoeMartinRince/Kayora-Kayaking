@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import * as fs from "fs";
 import * as path from "path";
 import { Route } from "@/routes/__root";
-import { structuredData, SchemaBusiness, SchemaWebSite } from "@/config/seo";
+import { structuredData, SchemaBusiness, SchemaWebSite, SchemaBreadcrumbList } from "@/config/seo";
 import { business } from "@/config/business";
 
 describe("SEO & Production Audit", () => {
@@ -34,6 +34,12 @@ describe("SEO & Production Audit", () => {
 
     expect(websiteSchema.url).toBe("https://www.kayorakayakingkochi.com/");
     expect(websiteSchema.inLanguage).toBe("en");
+
+    const breadcrumbSchema = graph.find(
+      (item): item is SchemaBreadcrumbList => item["@type"] === "BreadcrumbList",
+    );
+    expect(breadcrumbSchema).toBeDefined();
+    expect(breadcrumbSchema?.itemListElement[0]?.item).toBe("https://www.kayorakayakingkochi.com/");
   });
 
   it("configures head meta tags with canonical URL, OpenGraph, and Twitter cards", () => {
@@ -52,12 +58,13 @@ describe("SEO & Production Audit", () => {
 
     // Title & description
     const title = meta.find((m) => m.title);
-    expect(title?.title).toContain("Kayora Kayaking Kochi");
-    expect(title?.title).toContain("Kadamakkudy");
+    expect(title?.title).toContain("Kayaking in Kochi, Kerala");
+    expect(title?.title).toContain("Kayora Kayaking");
 
     const desc = meta.find((m) => m.name === "description");
     expect(desc?.content).toContain("Kadamakkudy");
     expect(desc?.content).toContain("Kochi");
+    expect(desc?.content).toContain("mangrove");
 
     // Canonical link
     const canonical = links.find((l) => l.rel === "canonical");

@@ -1,12 +1,12 @@
 import { business } from "@/config/business";
 
-export const siteTitle = "Kayora Kayaking Kochi | Kayaking in Kadamakkudy & Mangroves";
+export const siteTitle = "Kayaking in Kochi, Kerala | Kayora Kayaking";
 
 export const siteDescription =
-  "Experience guided kayaking in the serene backwaters of Kadamakkudy, Kochi. Sunrise paddling, sunset drifts, and mangrove forest kayaking tours with certified safety standards.";
+  "Experience guided kayaking in Kadamakkudy, Kochi with Kayora. Explore lush mangrove forests, peaceful sunrise paddling, and sunset drifts. Enquire today to book your adventure.";
 
 export const siteKeywords =
-  "Kayaking in Kochi, Kayaking in Kadamakkudy, Mangrove kayaking in Kochi, Sunrise kayaking in Kochi, Sunset kayaking in Kochi, Birdwatching during mangrove kayaking, Kayora Kayaking";
+  "Kayaking in Kochi, Kayaking in Kadamakkudy, Mangrove kayaking in Kochi, Sunrise kayaking in Kochi, Sunset kayaking in Kochi, Kayaking experiences in Kochi, Mangrove forest kayaking, Birdwatching during mangrove kayaking, Kayora Kayaking";
 
 export const canonicalUrl = business.websiteUrl;
 
@@ -65,9 +65,19 @@ export interface SchemaWebSite {
   inLanguage: string;
 }
 
+export interface SchemaBreadcrumbList {
+  "@type": "BreadcrumbList";
+  itemListElement: Array<{
+    "@type": "ListItem";
+    position: number;
+    name: string;
+    item: string;
+  }>;
+}
+
 export interface SchemaGraph {
   "@context": "https://schema.org";
-  "@graph": [SchemaBusiness, SchemaWebSite];
+  "@graph": [SchemaBusiness, SchemaWebSite, SchemaBreadcrumbList];
 }
 
 export const structuredData: SchemaGraph = {
@@ -130,6 +140,17 @@ export const structuredData: SchemaGraph = {
         "@id": `${business.websiteUrl}#business`,
       },
       inLanguage: "en",
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: business.websiteUrl,
+        },
+      ],
     },
   ],
 };

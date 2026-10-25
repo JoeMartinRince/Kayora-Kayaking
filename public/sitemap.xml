@@ -3,7 +3,7 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://www.kayorakayakingkochi.com/</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-10-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
@@ -20,6 +20,11 @@
       <image:loc>https://www.kayorakayakingkochi.com/assets/office-welcome.png</image:loc>
       <image:title>Kayora Kayaking Office and Launch Site</image:title>
       <image:caption>Kayora Kayaking launch site at Kadamakkudy, Pizhala, Kochi</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.kayorakayakingkochi.com/assets/rides/Sunset.jpg</image:loc>
+      <image:title>Sunset Drift Kayaking in Kochi</image:title>
+      <image:caption>Sunset drift kayaking tour through Kadamakkudy backwaters in Kochi, Kerala</image:caption>
     </image:image>
   </url>
 </urlset>

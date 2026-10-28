@@ -27,6 +27,10 @@ describe("SEO & Production Audit", () => {
     expect(businessSchema.address.addressCountry).toBe("IN");
     expect(businessSchema.sameAs).toContain(business.instagramUrl);
     expect(businessSchema.sameAs).toContain(business.launchPointMapUrl);
+    expect(businessSchema.priceRange).toBe("₹650");
+    expect(businessSchema.offers?.price).toBe("650");
+    expect(businessSchema.offers?.priceCurrency).toBe("INR");
+    expect(businessSchema.offers?.priceSpecification?.unitText).toBe("per person");
 
     const websiteSchema = graph.find((item): item is SchemaWebSite => item["@type"] === "WebSite");
     expect(websiteSchema).toBeDefined();

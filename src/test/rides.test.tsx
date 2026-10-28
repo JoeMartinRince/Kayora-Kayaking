@@ -4,8 +4,11 @@ import { ExperiencesSection } from "@/components/site/ExperiencesSection";
 import { WhyChooseSection } from "@/components/site/WhyChooseSection";
 import { ReviewsSection } from "@/components/site/ReviewsSection";
 import { FeaturedRideSection } from "@/components/site/FeaturedRideSection";
+import { BookingProcessSection } from "@/components/site/BookingProcessSection";
+import { FaqSection } from "@/components/site/FaqSection";
 import { experiences, stats } from "@/config/experiences";
 import { media } from "@/config/media";
+import { tourPricing } from "@/config/business";
 
 describe("Ride Card Images & Happy Paddlers Statistics", () => {
   it("displays 2000+ Happy Paddlers in stats and reviews", () => {
@@ -51,5 +54,31 @@ describe("Ride Card Images & Happy Paddlers Statistics", () => {
     });
     expect(mangroveImg).toBeInTheDocument();
     expect(mangroveImg).toHaveAttribute("src", media.mangroveForestRide);
+  });
+
+  it("displays ₹650 per person pricing across experiences, featured ride, booking, and FAQ", () => {
+    // Check config
+    expect(tourPricing.display).toBe("₹650 per person");
+    expect(experiences.every((exp) => exp.price === "₹650 per person")).toBe(true);
+
+    // Experiences cards (3 regular rides, while featured ride is in FeaturedRideSection)
+    const { unmount: unmountExp } = render(<ExperiencesSection />);
+    const expPrices = screen.getAllByText("₹650 per person");
+    expect(expPrices.length).toBe(3);
+    unmountExp();
+
+    // Featured ride section
+    const { unmount: unmountFeatured } = render(<FeaturedRideSection />);
+    expect(screen.getByText("₹650 per person")).toBeInTheDocument();
+    unmountFeatured();
+
+    // Booking process banner
+    const { unmount: unmountBooking } = render(<BookingProcessSection />);
+    expect(screen.getByText("₹650 per person")).toBeInTheDocument();
+    unmountBooking();
+
+    // FAQ section
+    render(<FaqSection />);
+    expect(screen.getByText(/what is the price for a kayaking tour\?/i)).toBeInTheDocument();
   });
 });

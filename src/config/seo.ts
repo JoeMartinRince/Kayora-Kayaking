@@ -1,4 +1,4 @@
-import { business } from "@/config/business";
+import { business, tourPricing } from "@/config/business";
 
 export const siteTitle = "Kayaking in Kochi, Kerala | Kayora Kayaking";
 
@@ -49,6 +49,19 @@ export interface SchemaBusiness {
   sameAs: string[];
   currenciesAccepted: string;
   paymentAccepted: string;
+  priceRange?: string;
+  offers?: {
+    "@type": "Offer";
+    price: string | number;
+    priceCurrency: string;
+    description?: string;
+    priceSpecification?: {
+      "@type": "UnitPriceSpecification";
+      price: string | number;
+      priceCurrency: string;
+      unitText: string;
+    };
+  };
   areaServed: SchemaAreaServed[];
   knowsAbout: string[];
 }
@@ -116,6 +129,19 @@ export const structuredData: SchemaGraph = {
       sameAs: [business.instagramUrl, business.launchPointMapUrl],
       currenciesAccepted: "INR",
       paymentAccepted: "Cash, UPI",
+      priceRange: tourPricing.rate,
+      offers: {
+        "@type": "Offer",
+        price: String(tourPricing.amount),
+        priceCurrency: tourPricing.currency,
+        description: `Guided kayaking experience in Kadamakkudy, Kochi (${tourPricing.display})`,
+        priceSpecification: {
+          "@type": "UnitPriceSpecification",
+          price: String(tourPricing.amount),
+          priceCurrency: tourPricing.currency,
+          unitText: "per person",
+        },
+      },
       areaServed: [
         { "@type": "City", name: "Kochi" },
         { "@type": "AdministrativeArea", name: "Kadamakkudy" },

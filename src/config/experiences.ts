@@ -1,5 +1,5 @@
 import { media } from "./media";
-import type { Experience } from "./business";
+import { type Experience, tourPricing } from "./business";
 
 // VERIFIED: names, descriptions, time of day and ~2 hr duration come from the current website and business updates.
 export const experiences: Experience[] = [
@@ -12,6 +12,7 @@ export const experiences: Experience[] = [
     duration: "~2 hrs",
     badge: "FEATURED MANGROVE RIDE",
     featured: true,
+    price: tourPricing.display,
     image: media.mangroveForestRide, // Genuine Kayora mangrove route photography
     objectPosition: "50% 52%",
   },
@@ -22,6 +23,7 @@ export const experiences: Experience[] = [
       "Start your day on the water as golden light spills across the backwaters. Peaceful, meditative, unforgettable.",
     time: "Early Morning",
     duration: "~2 hrs",
+    price: tourPricing.display,
     image: media.sunrise,
     objectPosition: "50% 68%",
   },
@@ -33,6 +35,7 @@ export const experiences: Experience[] = [
     time: "Midday",
     duration: "~2 hrs",
     badge: "Most Popular",
+    price: tourPricing.display,
     image: media.explore,
     objectPosition: "50% 60%",
   },
@@ -43,6 +46,7 @@ export const experiences: Experience[] = [
       "Glide into the evening as the sky blazes orange and pink. A romantic, soul-stirring close to any day.",
     time: "Evening",
     duration: "~2 hrs",
+    price: tourPricing.display,
     image: media.sunset,
     objectPosition: "50% 45%",
   },

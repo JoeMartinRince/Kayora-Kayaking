@@ -84,11 +84,9 @@ export function ExperiencesSection() {
                   {/* Pricing note & WhatsApp Action */}
                   <div className="mt-6 border-t border-border/60 pt-5">
                     <div className="mb-4 flex items-center justify-between">
-                      <span className="text-xs font-medium text-muted-foreground">
-                        Pricing & Slots
-                      </span>
-                      <span className="text-sm font-bold text-deep">
-                        {exp.price ? exp.price : "Enquire on WhatsApp"}
+                      <span className="text-xs font-medium text-muted-foreground">Tour Price</span>
+                      <span className="text-sm font-bold text-deep sm:text-base">
+                        {exp.price ? exp.price : "₹650 per person"}
                       </span>
                     </div>
 

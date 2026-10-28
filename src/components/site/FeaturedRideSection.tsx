@@ -1,6 +1,11 @@
 import { ArrowDown, Compass, Mail, MapPin, ShieldCheck } from "lucide-react";
 import { media } from "@/config/media";
-import { experienceEmailLink, mangroveRideMessage, whatsappLink } from "@/config/business";
+import {
+  experienceEmailLink,
+  mangroveRideMessage,
+  whatsappLink,
+  tourPricing,
+} from "@/config/business";
 import { WhatsAppIcon } from "./icons";
 
 const ext = { target: "_blank", rel: "noopener noreferrer" } as const;
@@ -77,6 +82,12 @@ export function FeaturedRideSection() {
                   <ShieldCheck className="h-4 w-4 shrink-0 text-mint" />
                   <span>Safety Gear Included</span>
                 </div>
+              </div>
+
+              {/* Tour Price Display */}
+              <div className="mt-3.5 flex items-center justify-between rounded-xl bg-on-dark/5 px-3 py-2 text-xs backdrop-blur-sm sm:text-sm">
+                <span className="font-medium text-on-dark/75">Tour Price</span>
+                <span className="font-bold text-mint">{tourPricing.display}</span>
               </div>
 
               {/* Action Buttons */}

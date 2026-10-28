@@ -5,7 +5,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { emailLink, whatsappLink } from "@/config/business";
+import { emailLink, tourPricing, whatsappLink } from "@/config/business";
 
 const faqs = [
   {
@@ -22,6 +22,10 @@ const faqs = [
     question: "How long is a typical kayaking tour?",
     answer:
       "All standard sessions (Sunrise Session, Explorer Route, and Sunset Drift) run for approximately 2 hours. This includes equipment fitting, basic technique coaching, and guided on-water paddling through mangroves and backwaters.",
+  },
+  {
+    question: "What is the price for a kayaking tour?",
+    answer: `All our guided kayaking tours are ${tourPricing.display} for an approximately 2-hour experience. This includes kayak rental, certified life jacket, paddle, and safety briefing with a local guide. Advance slot confirmation is recommended via WhatsApp or email.`,
   },
   {
     question: "What should I wear and bring along?",

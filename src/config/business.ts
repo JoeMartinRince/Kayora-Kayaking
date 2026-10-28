@@ -63,6 +63,14 @@ export function experienceEmailLink(experienceName: string) {
   });
 }
 
+export const tourPricing = {
+  amount: 650,
+  currency: "INR",
+  display: "₹650 per person",
+  rate: "₹650",
+  unit: "per person",
+} as const;
+
 export type Experience = {
   id: string;
   name: string;
@@ -72,7 +80,6 @@ export type Experience = {
   duration: string; // VERIFIED (approximate, as stated on the current site)
   badge?: string;
   featured?: boolean;
-  // PLACEHOLDER: prices are not published on the current site — fill in to display them.
   price?: string;
   image: string;
   objectPosition?: string;

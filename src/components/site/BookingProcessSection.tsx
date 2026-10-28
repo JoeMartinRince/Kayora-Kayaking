@@ -1,5 +1,5 @@
 import { CalendarCheck, MessageSquare, Waves, LifeBuoy } from "lucide-react";
-import { whatsappLink } from "@/config/business";
+import { tourPricing, whatsappLink } from "@/config/business";
 import { WhatsAppIcon } from "./icons";
 
 const steps = [
@@ -81,6 +81,11 @@ export function BookingProcessSection() {
         {/* Process Banner Callout */}
         <div className="mt-12 flex flex-col items-center justify-between gap-6 rounded-3xl border border-forest/20 bg-deep p-6 text-on-dark shadow-soft sm:flex-row sm:p-8">
           <div>
+            <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-mint/15 px-3 py-1 text-xs font-semibold text-mint">
+              <span>{tourPricing.display}</span>
+              <span className="opacity-60">•</span>
+              <span>All Equipment & Guide Included</span>
+            </div>
             <h3 className="text-lg font-bold sm:text-xl">
               Ready to check today's or this weekend's slots?
             </h3>
